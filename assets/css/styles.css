@@ -145,6 +145,7 @@ h1 {
   font-weight: var(--font-weight-bold);
   letter-spacing: -0.01em;
   color: var(--color-ink-navy);
+  overflow-wrap: break-word;
 }
 h2 {
   font-size: var(--text-heading);
@@ -152,6 +153,7 @@ h2 {
   font-weight: var(--font-weight-bold);
   letter-spacing: -0.01em;
   color: var(--color-ink-navy);
+  overflow-wrap: break-word;
 }
 h3 {
   font-size: var(--text-body-lg);
@@ -940,6 +942,7 @@ p { color: var(--color-slate-gray); }
 }
 .about-card-row:last-child { border-bottom: none; padding-bottom: 0; }
 .about-card-label { font-size: var(--text-body-sm); color: var(--color-slate-gray); flex: 1; }
+.about-card-values { display: flex; align-items: center; gap: 8px; flex: none; }
 .about-card-value { font-size: var(--text-body-sm); font-weight: var(--font-weight-semibold); }
 .strike { color: var(--color-mist-gray); text-decoration: line-through; }
 .value-accent { color: var(--color-signal-blue); font-size: var(--text-body); }
@@ -1018,6 +1021,7 @@ p { color: var(--color-slate-gray); }
   gap: var(--spacing-64);
   align-items: start;
 }
+.contact-inner > * { min-width: 0; }
 
 .contact-heading {
   font-size: var(--text-heading);
@@ -1473,7 +1477,7 @@ p { color: var(--color-slate-gray); }
   .approach-grid { grid-template-columns: repeat(2, 1fr); }
   .about-points { grid-template-columns: 1fr; }
   .pricing-card { grid-template-columns: 1fr; }
-  .pricing-card-side { min-height: 280px; }
+  .pricing-card-side { min-height: 280px; order: -1; }
   .footer-inner { grid-template-columns: repeat(3, 1fr); }
   .footer-brand { grid-column: 1 / -1; }
   .contact-inner { grid-template-columns: 1fr; }
@@ -1482,6 +1486,11 @@ p { color: var(--color-slate-gray); }
 @media (max-width: 720px) {
   h1 { font-size: 44px; }
   h2 { font-size: var(--text-heading-sm); }
+  .contact-heading { font-size: var(--text-heading-sm); }
+  .hero-facts { flex-wrap: nowrap; gap: clamp(10px, 4vw, 32px); }
+  .hero-fact { min-width: 0; flex: 1 1 0; }
+  .fact-num { font-size: clamp(16px, 5.5vw, 28px); }
+  .about-card-values { flex-direction: column; align-items: flex-end; gap: 2px; }
   .main-nav, .header-cta { display: none; }
   .nav-toggle { display: flex; }
   .portfolio-grid { grid-template-columns: 1fr; }
