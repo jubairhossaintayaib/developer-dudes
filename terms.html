@@ -24,10 +24,19 @@
 
     <nav class="main-nav" aria-label="Primary">
       <a href="index.html#portfolio">Portfolio</a>
-      <a href="index.html#approach">Approach</a>
-      <a href="index.html#about">About</a>
+      <div class="nav-dropdown">
+        <button type="button" class="nav-dropdown-trigger" aria-haspopup="true" aria-expanded="false">
+          Our Services
+          <svg class="nav-chevron" width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true"><path d="M2 3.5 5 6.5 8 3.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="nav-dropdown-menu">
+          <a href="web-development.html">Web Development</a>
+          <a href="crm-automation.html">CRM Automation</a>
+          <a href="ai-agentic-workflows.html">AI Agentic Workflow Development</a>
+        </div>
+      </div>
+      <a href="about.html">About</a>
       <a href="contact.html">Contact</a>
-      <a href="index.html#pricing">Pricing</a>
     </nav>
 
     <div class="header-cta">
@@ -41,10 +50,19 @@
 
   <nav class="mobile-nav" id="mobile-nav" aria-label="Mobile">
     <a href="index.html#portfolio">Portfolio</a>
-    <a href="index.html#approach">Approach</a>
-    <a href="index.html#about">About</a>
+    <div class="mobile-nav-group">
+      <button type="button" class="mobile-nav-toggle" aria-expanded="false" aria-controls="mobile-services">
+        Our Services
+        <svg class="nav-chevron" width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true"><path d="M2 3.5 5 6.5 8 3.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <div class="mobile-nav-submenu" id="mobile-services">
+        <a href="web-development.html">Web Development</a>
+        <a href="crm-automation.html">CRM Automation</a>
+        <a href="ai-agentic-workflows.html">AI Agentic Workflow Development</a>
+      </div>
+    </div>
+    <a href="about.html">About</a>
     <a href="contact.html">Contact</a>
-    <a href="index.html#pricing">Pricing</a>
     <a class="btn btn-primary" href="contact.html">Build My Website</a>
   </nav>
 </header>
@@ -122,9 +140,14 @@
     <div class="footer-col">
       <h5>Site</h5>
       <a href="index.html#portfolio">Portfolio</a>
-      <a href="index.html#approach">Approach</a>
-      <a href="index.html#about">About</a>
-      <a href="index.html#pricing">Pricing</a>
+      <a href="about.html">About</a>
+    </div>
+
+    <div class="footer-col">
+      <h5>Services</h5>
+      <a href="web-development.html">Web Development</a>
+      <a href="crm-automation.html">CRM Automation</a>
+      <a href="ai-agentic-workflows.html">AI Agentic Workflow Development</a>
     </div>
 
     <div class="footer-col">
