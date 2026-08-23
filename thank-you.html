@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Message Sent — Developer Dudes</title>
+<meta name="description" content="Thanks for reaching out to Developer Dudes — we'll be in touch within one business day.">
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body>
+
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="site-header" id="top">
+  <div class="wrap header-inner">
+    <a class="logo" href="index.html">
+      <span class="logo-mark" aria-hidden="true">&lt;/&gt;</span>
+      <span class="logo-text">Developer<em>Dudes</em></span>
+    </a>
+
+    <nav class="main-nav" aria-label="Primary">
+      <a href="index.html#portfolio">Portfolio</a>
+      <a href="index.html#approach">Approach</a>
+      <a href="index.html#about">About</a>
+      <a href="contact.html">Contact</a>
+      <a href="index.html#pricing">Pricing</a>
+    </nav>
+
+    <div class="header-cta">
+      <a class="btn btn-primary btn-compact" href="index.html">Back to home</a>
+    </div>
+
+    <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false" aria-controls="mobile-nav">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+
+  <nav class="mobile-nav" id="mobile-nav" aria-label="Mobile">
+    <a href="index.html#portfolio">Portfolio</a>
+    <a href="index.html#approach">Approach</a>
+    <a href="index.html#about">About</a>
+    <a href="contact.html">Contact</a>
+    <a href="index.html#pricing">Pricing</a>
+    <a class="btn btn-primary" href="index.html">Back to home</a>
+  </nav>
+</header>
+
+<main id="main">
+  <section class="section thank-you-section">
+    <div class="wrap thank-you-inner reveal">
+      <span class="thank-you-check" aria-hidden="true">
+        <svg width="30" height="30" viewBox="0 0 24 24" fill="none"><path d="m4 12 5 5L20 6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </span>
+      <h1 class="thank-you-heading">Thanks<span id="thank-you-name"></span> — message sent.</h1>
+      <p class="hero-sub thank-you-sub">We've got your message and will get back to you within one business day. In the meantime, feel free to email us directly at <a class="inline-link" href="mailto:thedeveloperdudesllc@gmail.com">thedeveloperdudesllc@gmail.com</a>.</p>
+      <div class="thank-you-actions">
+        <a class="btn btn-primary btn-lg" href="index.html">Back to home</a>
+        <a class="btn btn-ghost" href="index.html#portfolio">See our work &rarr;</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap footer-inner">
+    <div class="footer-brand">
+      <a class="logo" href="index.html">
+        <span class="logo-mark" aria-hidden="true">&lt;/&gt;</span>
+        <span class="logo-text">Developer<em>Dudes</em></span>
+      </a>
+      <p>Fast, no-nonsense websites for US businesses. $0 setup, $29.99/month, everything included.</p>
+    </div>
+
+    <div class="footer-col">
+      <h5>Site</h5>
+      <a href="index.html#portfolio">Portfolio</a>
+      <a href="index.html#approach">Approach</a>
+      <a href="index.html#about">About</a>
+      <a href="index.html#pricing">Pricing</a>
+    </div>
+
+    <div class="footer-col">
+      <h5>Get in touch</h5>
+      <a href="contact.html">Contact us</a>
+      <a href="mailto:thedeveloperdudesllc@gmail.com">thedeveloperdudesllc@gmail.com</a>
+    </div>
+  </div>
+  <div class="wrap footer-bottom">
+    <span>&copy; <span id="year"></span> Developer Dudes. All rights reserved.</span>
+    <nav class="footer-legal" aria-label="Legal">
+      <a href="terms.html">Terms &amp; Conditions</a>
+      <a href="privacy-policy.html">Privacy Policy</a>
+      <a href="refund-policy.html">Refund Policy</a>
+    </nav>
+    <span>Made in the USA.</span>
+  </div>
+</footer>
+
+<script src="assets/js/main.js"></script>
+<script>
+  (function () {
+    var name = null;
+    try { name = sessionStorage.getItem('dd_contact_name'); } catch (err) {}
+    if (name) {
+      var el = document.getElementById('thank-you-name');
+      if (el) el.textContent = ', ' + name;
+      try { sessionStorage.removeItem('dd_contact_name'); } catch (err) {}
+    }
+  })();
+</script>
+</body>
+</html>
