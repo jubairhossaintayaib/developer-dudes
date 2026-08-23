@@ -1488,7 +1488,7 @@ p { color: var(--color-slate-gray); }
   h2 { font-size: var(--text-heading-sm); }
   .contact-heading { font-size: var(--text-heading-sm); }
   .hero-facts { flex-wrap: nowrap; gap: clamp(10px, 4vw, 32px); }
-  .hero-fact { min-width: 0; flex: 1 1 0; }
+  .hero-fact { min-width: 0; flex: 0 1 auto; }
   .fact-num { font-size: clamp(16px, 5.5vw, 28px); }
   .about-card-values { flex-direction: column; align-items: flex-end; gap: 2px; }
   .main-nav, .header-cta { display: none; }
