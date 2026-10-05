@@ -11,7 +11,7 @@ Set these public values in `assets/js/preview-config.js`:
 
 Without configuration, WhatsApp opens an email contact fallback and applications explain that the request has not been sent. Nothing silently discards a lead or claims a successful submission. No external form provider has been selected, no account created, and no test leads sent.
 
-The JSON request includes `trade`, `business`, `website` (optional), `area`, `name`, `whatsapp`, `email`, `consent`, `consentVersion`, `offer`, and `source`. `whatsapp` preserves the applicant's input, so normalise it on the receiving service. The form keeps answers only in the current page, not local storage. Network errors preserve answers for retry; a 20-second timeout prevents a stuck submit button.
+The JSON request includes `trade`, `business`, `website` (optional), `name`, `whatsapp`, `email`, `consent`, `consentVersion`, `offer`, and `source`. `whatsapp` preserves the applicant's input, so normalise it on the receiving service. The form keeps answers only in the current page, not local storage. Network errors preserve answers for retry; a 20-second timeout prevents a stuck submit button.
 
 Confirm that the existing linked privacy policy and terms cover this UK £39/month offer before publishing. Domain registration costs, cancellation terms and delivery time guarantees have not been invented.
 
@@ -19,7 +19,7 @@ Confirm that the existing linked privacy policy and terms cover this UK £39/mon
 
 - Hero screenshot: supplied Plumber Bro capture, optimised to WebP. Transform-only 34-second scroll in each direction, short holds at the ends, pause/play control, pauses off-screen, when hidden and on mouse hover. Reduced-motion visitors start with a static preview.
 - Portfolio: four scrollable full-page images in a native dialog, with Escape dismissal and focus restoration.
-- Application: seven steps including review; keyboard navigation, validation, back navigation and contact consent.
+- Application: six steps including review; keyboard navigation, validation, back navigation and contact consent.
 - No dependencies or build step added. Uses the existing brand stylesheet and page-scoped CSS/JS.
 
 For a local preview, serve the repository with a static HTTP server and visit `/free-preview.html`.

@@ -92,7 +92,7 @@
   const next = document.getElementById('form-next');
   const back = document.getElementById('form-back');
   const error = document.getElementById('form-error');
-  const labels = ['YOUR BUSINESS', 'YOUR BUSINESS', 'YOUR SERVICE AREA', 'A LITTLE INTRODUCTION', 'LET’S CONNECT', 'YOUR CONTACT DETAILS', 'CHECK YOUR DETAILS'];
+  const labels = ['YOUR BUSINESS', 'YOUR BUSINESS', 'A LITTLE INTRODUCTION', 'LET’S CONNECT', 'YOUR CONTACT DETAILS', 'CHECK YOUR DETAILS'];
   let currentStep = 0;
   let submitting = false;
   let submitted = false;
@@ -100,7 +100,7 @@
     const value = name => form.elements[name].value.trim();
     return {
       trade: value('trade'), business: value('business'), website: value('website'),
-      area: value('area'), name: value('name'), whatsapp: value('whatsapp'),
+      name: value('name'), whatsapp: value('whatsapp'),
       email: value('email'), consent: document.getElementById('consent').checked,
       offer: 'Free website build; £39/month hosting, management and updates',
       source: 'free-preview', consentVersion: 'preview-contact-v1'
@@ -149,7 +149,7 @@
     const answers = readValues();
     const review = document.getElementById('application-review');
     review.replaceChildren();
-    [['Trade', answers.trade], ['Business', answers.business], ['Website', answers.website || 'No existing website'], ['Area', answers.area], ['Name', answers.name], ['WhatsApp', answers.whatsapp], ['Email', answers.email]].forEach(([label, value]) => {
+    [['Trade', answers.trade], ['Business', answers.business], ['Website', answers.website || 'No existing website'], ['Name', answers.name], ['WhatsApp', answers.whatsapp], ['Email', answers.email]].forEach(([label, value]) => {
       const term = document.createElement('dt');
       const detail = document.createElement('dd');
       term.textContent = label;
@@ -165,7 +165,7 @@
       step.disabled = position !== index;
     });
     document.getElementById('step-caption').textContent = labels[index];
-    document.getElementById('step-count').textContent = `${String(index + 1).padStart(2, '0')} / 07`;
+    document.getElementById('step-count').textContent = `${String(index + 1).padStart(2, '0')} / ${String(steps.length).padStart(2, '0')}`;
     document.getElementById('form-progress-fill').style.transform = `scaleX(${(index + 1) / steps.length})`;
     form.querySelector('[role="progressbar"]').setAttribute('aria-valuenow', String(index + 1));
     back.hidden = index === 0;
