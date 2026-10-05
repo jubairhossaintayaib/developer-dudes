@@ -30,9 +30,9 @@
 .preview-cta .icon { width: 25px; height: 25px; }
 .preview-cta small { color: #e5efff; font-size: 13px; font-weight: 500; }
 .preview-cta:active { transform: scale(.98); }
-.hero-proof { display: flex; justify-content: center; gap: 24px; margin-top: 25px; font-size: 10px; font-weight: 600; color: #54708b; }
-.hero-proof > span { display: flex; align-items: center; gap: 4px; }
-.hero-proof .icon { color: #329568; width: 14px; height: 14px; stroke-width: 2.3; }
+.hero-proof { display: flex; justify-content: center; margin-top: 26px; font-size: 15px; font-weight: 600; color: #54708b; }
+.hero-proof > span { display: flex; align-items: center; gap: 7px; }
+.hero-proof .icon { color: #329568; width: 18px; height: 18px; stroke-width: 2.3; }
 .laptop-scene { position: relative; max-width: 940px; margin: 57px auto 0; padding-inline: 40px; }
 .laptop { position: relative; z-index: 1; }
 .laptop-lid { position: relative; background: #182632; border: 2px solid #40505e; padding: 19px 10px 0; border-radius: 17px 17px 5px 5px; box-shadow: 0 18px 60px #0b355818; }
@@ -201,8 +201,8 @@ body:has(dialog[open]) { overflow: hidden; }
   .preview-cta > span { font-size: 17px; gap: 11px; }
   .preview-cta .icon { width: 22px; height: 22px; }
   .preview-cta small { font-size: 12px; }
-  .hero-proof { gap: 12px; flex-wrap: wrap; margin-top: 23px; font-size: 9px; row-gap: 7px; }
-  .hero-proof .icon { width: 11px; }
+  .hero-proof { margin-top: 24px; font-size: 14px; }
+  .hero-proof .icon { width: 16px; height: 16px; }
   .laptop-scene { padding-inline: 13px; margin-top: 40px; }
   .laptop-lid { padding: 12px 5px 0; border-radius: 10px 10px 3px 3px; border-width: 1px; }
   .laptop-camera { width: 3px; height: 3px; top: 4px; }
@@ -261,8 +261,6 @@ body:has(dialog[open]) { overflow: hidden; }
 @media (max-width: 560px) {
   .preview-cta { width: 100%; padding-inline: 16px; }
   .preview-cta > span { font-size: clamp(15px, 4.5vw, 17px); gap: 9px; }
-  .hero-proof { gap: 7px; flex-wrap: nowrap; white-space: nowrap; font-size: clamp(7.2px, 2.3vw, 9px); }
-  .hero-proof > span { gap: 3px; }
   .trades-strip p { flex-direction: column; gap: 5px; }
   .trades-strip .row-dot { display: none; }
 }
