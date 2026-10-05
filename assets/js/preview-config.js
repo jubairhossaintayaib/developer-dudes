@@ -5,5 +5,8 @@ window.DD_PREVIEW_CONFIG = {
   // Lead intake URL: the Google Apps Script web app from apps-script/lead-sheet.gs (ends in /exec).
   // The form POSTs the answers as JSON and only a { "ok": true } reply counts as received.
   submissionEndpoint: 'https://script.google.com/macros/s/AKfycbzQLaOY6KnUKCt_mptMeUibLjUkaW9VYohH1_OPmrPlKLYkAcwRVXZOSEq_bh74NIQT/exec',
+  // Meta Pixel (dataset "DD"). PageView fires on both free preview pages and Lead on the
+  // thank-you page after a saved application. Leave empty to switch tracking off.
+  metaPixelId: '1133759729576559',
   contactEmail: 'thedeveloperdudesllc@gmail.com'
 };

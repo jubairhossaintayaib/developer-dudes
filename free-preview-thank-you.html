@@ -41,15 +41,21 @@
   <footer class="lp-footer"><div class="lp-wrap"><div class="footer-top"><a class="logo" href="index.html"><img class="logo-mark" src="assets/images/brand/logo-dd.png" width="40" height="40" alt=""><span class="logo-text">Developer<em>Dudes</em></span></a><p>Proper websites. Honest pricing. Real people.</p></div><div class="footer-bottom-row"><span>© <span id="footer-year">2026</span> Developer Dudes. All rights reserved.</span><nav aria-label="Legal"><a href="privacy-policy.html">Privacy policy</a><a href="terms.html">Terms &amp; conditions</a><a href="mailto:thedeveloperdudesllc@gmail.com">Get in touch</a></nav></div></div></footer>
 
   <script src="assets/js/preview-config.js"></script>
+  <script src="assets/js/preview-pixel.js"></script>
   <script>
     (() => {
       document.getElementById('footer-year').textContent = new Date().getFullYear();
       let name = null;
+      let fromForm = false;
       try {
         name = sessionStorage.getItem('dd_preview_name');
+        fromForm = sessionStorage.getItem('dd_preview_lead') === '1';
         sessionStorage.removeItem('dd_preview_name');
+        sessionStorage.removeItem('dd_preview_lead');
       } catch (_) {}
       if (name) document.getElementById('thanks-name').textContent = `, ${name}`;
+      // Count the lead once, and only when this page follows a saved application.
+      if (fromForm && window.fbq) fbq('track', 'Lead', { content_name: 'Free website preview' });
 
       // Without a configured number the buttons keep their email fallback.
       const number = String((window.DD_PREVIEW_CONFIG || {}).whatsappNumber || '').replace(/\D/g, '');

@@ -8,6 +8,7 @@ Set these public values in `assets/js/preview-config.js`:
 
 - `whatsappNumber`: your business WhatsApp number, including country code, digits only.
 - `submissionEndpoint`: the `/exec` URL of the Google Apps Script web app set up below. Do not put secrets in browser code.
+- `metaPixelId`: the Meta Pixel ID. `assets/js/preview-pixel.js` sends PageView on both free preview pages, and the thank-you page sends Lead once after a saved application (not on a direct visit or refresh). Leave empty to switch tracking off. There is no cookie consent banner; the pixel loads for every visitor.
 
 Without an endpoint, applications explain that the request has not been sent. Nothing silently discards a lead or claims a successful submission. Visitors reach `free-preview-thank-you.html` only after the endpoint replies `{ "ok": true }`.
 

@@ -238,7 +238,11 @@
       const result = await response.json();
       if (!response.ok || result.ok !== true) throw new Error(`Submission failed: ${response.status}`);
       submitted = true;
-      try { sessionStorage.setItem('dd_preview_name', readValues().name.split(/\s+/)[0]); } catch (_) {}
+      // The thank-you page greets by first name and counts the lead for Meta once.
+      try {
+        sessionStorage.setItem('dd_preview_name', readValues().name.split(/\s+/)[0]);
+        sessionStorage.setItem('dd_preview_lead', '1');
+      } catch (_) {}
       window.location.href = 'free-preview-thank-you.html';
     } catch (_) {
       showError('We couldn’t confirm your request was received. Please try again, or contact us by email. Your answers are still here.');
