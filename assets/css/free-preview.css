@@ -93,9 +93,8 @@
 .form-progress { background: #e8eff7; height: 3px; border-radius: 2px; margin: 13px 0 33px; overflow: hidden; }
 .form-progress > span { display: block; height: 100%; background: var(--color-signal-blue); transform-origin: left; transform: scaleX(.166667); }
 .question { border: 0; padding: 0; margin: 0; min-width: 0; }
-.question legend { font-size: 22px; line-height: 1.5; letter-spacing: -.7px; font-weight: 700; padding: 0; width: 100%; }
+.question legend { font-size: 22px; line-height: 1.5; letter-spacing: -.7px; font-weight: 700; padding: 0 0 22px; width: 100%; }
 .question-index { color: var(--color-signal-blue); font-size: 12px; vertical-align: middle; margin-right: 8px; letter-spacing: 0; white-space: nowrap; }
-.question-help { font-size: 12px; color: #71869b; margin: 9px 0 24px; line-height: 1.8; }
 .trade-options { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; }
 .trade-options label { cursor: pointer; position: relative; min-width: 0; }
 .trade-options input { position: absolute; opacity: 0; width: 1px; height: 1px; }
@@ -123,9 +122,6 @@
 #application-review { display: grid; grid-template-columns: 86px 1fr; gap: 7px 15px; font-size: 11px; margin: 0 0 20px; overflow-wrap: anywhere; }
 #application-review dt { color: #72889e; }
 #application-review dd { margin: 0; font-weight: 600; }
-.consent-label { display: flex; gap: 10px; font-size: 10px; line-height: 1.8; color: #4f6f8c; }
-.consent-label input { width: 16px; height: 16px; flex: 0 0 auto; margin-top: 3px; accent-color: var(--color-signal-blue); }
-.consent-label a { text-decoration: underline; text-underline-offset: 3px; }
 .form-success { margin: auto 0; text-align: center; }
 .form-success h3 { font-size: 26px; margin: 17px 0 10px; }
 .form-success p { font-size: 13px; line-height: 1.8; color: #54708b; margin-bottom: 20px; }
@@ -136,11 +132,11 @@
 .text-whatsapp .icon { width: 16px; height: 16px; }
 .faq-list details { border-bottom: 1px solid #dfe8f1; }
 .faq-list details:first-child { border-top: 1px solid #dfe8f1; }
-.faq-list summary { display: flex; justify-content: space-between; gap: 18px; align-items: center; padding: 21px 0; cursor: pointer; list-style: none; font-size: 13px; font-weight: 700; }
+.faq-list summary { display: flex; justify-content: space-between; gap: 18px; align-items: center; padding: 21px 0; cursor: pointer; list-style: none; font-size: 16px; font-weight: 700; }
 .faq-list summary::-webkit-details-marker { display: none; }
 .faq-list summary .icon { width: 16px; height: 16px; color: #68849e; }
 .faq-list details[open] summary .icon { transform: rotate(45deg); }
-.faq-list details > p { padding: 0 27px 22px 0; color: #5e7992; font-size: 12px; line-height: 1.9; }
+.faq-list details > p { padding: 0 27px 22px 0; color: #5e7992; font-size: 14px; line-height: 1.8; }
 .lp-footer { padding-bottom: 25px; }
 .footer-top { display: flex; align-items: center; justify-content: space-between; gap: 20px; padding-bottom: 31px; }
 .footer-top > p { font-size: 11px; color: #6e859a; }
@@ -238,14 +234,13 @@ body:has(dialog[open]) { overflow: hidden; }
   .work-category { font-size: 8px; }
   .preview-form { padding: 25px 22px 28px; min-height: 420px; }
   .question legend { font-size: 20px; }
-  .question-help { font-size: 11px; margin-bottom: 20px; }
   .trade-options { grid-template-columns: 1fr; gap: 7px; }
   .trade-options label > span { font-size: 12px; min-height: 44px; }
   .line-input { font-size: 20px !important; }
   .small-input { font-size: 16px !important; }
   .enter-hint { display: none; }
   .faq-layout { grid-template-columns: 1fr; gap: 30px; }
-  .faq-list summary { font-size: 12px; line-height: 1.7; padding-block: 19px; }
+  .faq-list summary { font-size: 15px; line-height: 1.6; padding-block: 19px; }
   .footer-top { flex-wrap: wrap; gap: 18px; padding-bottom: 24px; }
   .footer-top > p { order: 3; width: 100%; font-size: 10px; }
   .footer-bottom-row { flex-direction: column; gap: 13px; line-height: 1.7; }
@@ -258,6 +253,8 @@ body:has(dialog[open]) { overflow: hidden; }
 @media (max-width: 560px) {
   .preview-cta { width: 100%; padding-inline: 16px; }
   .preview-cta > span { font-size: clamp(15px, 4.5vw, 17px); gap: 9px; }
+  .hero-proof { gap: 7px; flex-wrap: nowrap; white-space: nowrap; font-size: clamp(7.2px, 2.3vw, 9px); }
+  .hero-proof > span { gap: 3px; }
   .trades-strip p { flex-direction: column; gap: 5px; }
   .trades-strip .row-dot { display: none; }
 }

@@ -101,10 +101,50 @@
     return {
       trade: value('trade'), business: value('business'), website: value('website'),
       name: value('name'), whatsapp: value('whatsapp'),
-      email: value('email'), consent: document.getElementById('consent').checked,
+      email: value('email'),
       offer: 'Free website build; £39/month hosting, management and updates',
-      source: 'free-preview', consentVersion: 'preview-contact-v1'
+      source: 'free-preview'
     };
+  }
+  // UK numbers are grouped as they're typed and capped at their full length.
+  // A leading + keeps another country's number, up to the 15-digit E.164 limit.
+  function groupUkNumber(digits) {
+    const sizes = /^07/.test(digits) ? [5, 6]
+      : /^02/.test(digits) ? [3, 4, 4]
+      : /^01(?:1\d|\d1)/.test(digits) ? [4, 3, 4]
+      : /^01/.test(digits) ? [5, 6]
+      : [4, 3, 4];
+    const groups = [];
+    let start = 0;
+    for (const size of sizes) {
+      if (start >= digits.length) break;
+      groups.push(digits.slice(start, start + size));
+      start += size;
+    }
+    return groups.join(' ');
+  }
+  // shift is how many digits the tidy-up added or dropped before the caret.
+  function formatWhatsapp(raw) {
+    let digits = raw.replace(/\D/g, '');
+    let international = raw.trim().startsWith('+');
+    let shift = 0;
+    if (!international && digits.startsWith('00')) { digits = digits.slice(2); international = true; shift -= 2; }
+    if (!international && digits.startsWith('44')) international = true;
+    if (international && !digits.startsWith('44')) return { value: `+${digits.slice(0, 15)}`, shift };
+    if (international) {
+      let national = digits.slice(2);
+      if (national.startsWith('0')) { national = national.slice(1); shift -= 1; }
+      national = national.slice(0, 10);
+      return { value: national ? `+44 ${groupUkNumber(`0${national}`).slice(1)}` : '+44', shift };
+    }
+    if (/^[1235789]/.test(digits)) { digits = `0${digits}`; shift += 1; }
+    return { value: groupUkNumber(digits.slice(0, 11)), shift };
+  }
+  function isValidWhatsapp(value) {
+    const digits = value.replace(/\D/g, '');
+    if (value.startsWith('+') && !digits.startsWith('44')) return digits.length >= 8 && digits.length <= 15;
+    const national = value.startsWith('+') ? `0${digits.slice(2)}` : digits;
+    return /^0(?:1\d{8,9}|[235789]\d{9})$/.test(national);
   }
   function showError(message, control) {
     error.textContent = message;
@@ -128,15 +168,13 @@
     const active = steps[currentStep];
     const controls = Array.from(active.querySelectorAll('input'));
     for (const input of controls) {
-      if (input.type !== 'radio' && input.type !== 'checkbox') input.value = input.value.trim();
+      if (input.type !== 'radio') input.value = input.value.trim();
       if (input.name === 'whatsapp') {
-        const digits = input.value.replace(/\D/g, '');
-        const isValid = /^[+\d\s().-]+$/.test(input.value) && digits.length >= 8 && digits.length <= 15;
-        input.setCustomValidity(isValid ? '' : 'Enter a valid WhatsApp number, including your country code if outside the UK.');
+        input.value = formatWhatsapp(input.value).value;
+        input.setCustomValidity(isValidWhatsapp(input.value) ? '' : 'Enter a full UK number, e.g. 07700 900123. Outside the UK? Start with + and your country code.');
       }
       if (!input.checkValidity()) {
         const message = input.type === 'radio' ? 'Please choose the trade that best describes your business.'
-          : input.type === 'checkbox' ? 'Please confirm we can contact you about your preview.'
           : input.type === 'email' ? 'Please enter a valid email address.'
           : input.validationMessage || 'Please fill in this answer to continue.';
         showError(message, input);
@@ -171,7 +209,7 @@
     back.hidden = index === 0;
     next.textContent = index === steps.length - 1 ? 'Request my free preview →' : 'Next →';
     if (index === steps.length - 1) renderReview();
-    if (focus) steps[index].querySelector('input')?.focus();
+    if (focus) (steps[index].querySelector('input') || next).focus();
   }
   async function submitApplication() {
     if (submitting || submitted) return;
@@ -229,7 +267,7 @@
   back.addEventListener('click', () => { if (!submitting && currentStep > 0) showStep(currentStep - 1); });
   form.addEventListener('submit', event => { event.preventDefault(); advance(); });
   form.addEventListener('keydown', event => {
-    if (event.key === 'Enter' && event.target.tagName === 'INPUT' && event.target.type !== 'checkbox') {
+    if (event.key === 'Enter' && event.target.tagName === 'INPUT') {
       event.preventDefault();
       advance();
     }
@@ -241,7 +279,23 @@
     }
   });
   form.addEventListener('input', event => {
-    if (event.target.name === 'whatsapp') event.target.setCustomValidity('');
+    const input = event.target;
+    if (input.name === 'whatsapp') {
+      const caret = input.selectionStart ?? input.value.length;
+      const atEnd = caret >= input.value.length;
+      const digitsBefore = input.value.slice(0, caret).replace(/\D/g, '').length;
+      const { value, shift } = formatWhatsapp(input.value);
+      input.value = value;
+      if (!atEnd) {
+        // Keep the caret after the same digit it was after before regrouping.
+        let position = 0;
+        for (let seen = 0; position < value.length && seen < digitsBefore + shift; position += 1) {
+          if (/\d/.test(value[position])) seen += 1;
+        }
+        input.setSelectionRange(position, position);
+      }
+      input.setCustomValidity('');
+    }
     clearError();
   });
   showStep(0, false);
