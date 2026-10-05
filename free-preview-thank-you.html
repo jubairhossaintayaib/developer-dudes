@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Request received — Developer Dudes</title>
+  <meta name="description" content="Thanks for requesting your free website preview. We’ll be in touch on WhatsApp.">
+  <meta name="robots" content="noindex">
+  <meta name="theme-color" content="#0b3558">
+  <link rel="icon" href="assets/images/brand/logo-dd.png" type="image/png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/styles.css">
+  <link rel="stylesheet" href="assets/css/free-preview.css">
+</head>
+<body class="preview-page thanks-page" id="top">
+  <a class="skip-link" href="#main">Skip to content</a>
+  <svg class="icon-definitions" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/></symbol>
+    <symbol id="i-whatsapp" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></symbol>
+  </defs></svg>
+
+  <header class="lp-header">
+    <div class="lp-wrap header-row">
+      <a class="logo" href="index.html" aria-label="Developer Dudes home"><img class="logo-mark" src="assets/images/brand/logo-dd.png" width="40" height="40" alt=""><span class="logo-text">Developer<em>Dudes</em></span></a>
+      <a class="whatsapp-button" href="mailto:thedeveloperdudesllc@gmail.com" data-whatsapp-link><svg class="icon icon-fill" aria-hidden="true"><use href="#i-whatsapp"/></svg><span>Chat on WhatsApp</span></a>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="thanks-section">
+      <div class="lp-wrap thanks-inner">
+        <span class="success-mark"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg></span>
+        <h1>Thanks<span id="thanks-name"></span>. We’ve got your request.</h1>
+        <p>We’ll reach out to you on WhatsApp to start building your free website preview.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="lp-footer"><div class="lp-wrap"><div class="footer-top"><a class="logo" href="index.html"><img class="logo-mark" src="assets/images/brand/logo-dd.png" width="40" height="40" alt=""><span class="logo-text">Developer<em>Dudes</em></span></a><p>Proper websites. Honest pricing. Real people.</p></div><div class="footer-bottom-row"><span>© <span id="footer-year">2026</span> Developer Dudes. All rights reserved.</span><nav aria-label="Legal"><a href="privacy-policy.html">Privacy policy</a><a href="terms.html">Terms &amp; conditions</a><a href="mailto:thedeveloperdudesllc@gmail.com">Get in touch</a></nav></div></div></footer>
+
+  <script src="assets/js/preview-config.js"></script>
+  <script>
+    (() => {
+      document.getElementById('footer-year').textContent = new Date().getFullYear();
+      let name = null;
+      try {
+        name = sessionStorage.getItem('dd_preview_name');
+        sessionStorage.removeItem('dd_preview_name');
+      } catch (_) {}
+      if (name) document.getElementById('thanks-name').textContent = `, ${name}`;
+
+      // Without a configured number the buttons keep their email fallback.
+      const number = String((window.DD_PREVIEW_CONFIG || {}).whatsappNumber || '').replace(/\D/g, '');
+      if (!/^[1-9]\d{7,14}$/.test(number)) return;
+      const text = 'Hi Developer Dudes! I’ve just requested a free website preview for my business.';
+      document.querySelectorAll('[data-whatsapp-link]').forEach(link => {
+        link.href = `https://wa.me/${number}?text=${encodeURIComponent(text)}`;
+        link.target = '_blank';
+        link.rel = 'noopener noreferrer';
+      });
+    })();
+  </script>
+</body>
+</html>

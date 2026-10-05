@@ -122,9 +122,12 @@
 #application-review { display: grid; grid-template-columns: 86px 1fr; gap: 7px 15px; font-size: 11px; margin: 0 0 20px; overflow-wrap: anywhere; }
 #application-review dt { color: #72889e; }
 #application-review dd { margin: 0; font-weight: 600; }
-.form-success { margin: auto 0; text-align: center; }
-.form-success h3 { font-size: 26px; margin: 17px 0 10px; }
-.form-success p { font-size: 13px; line-height: 1.8; color: #54708b; margin-bottom: 20px; }
+.thanks-page { display: flex; flex-direction: column; min-height: 100vh; min-height: 100dvh; }
+.thanks-page main { flex: 1; display: grid; align-items: center; }
+.thanks-section { padding: 90px 0 100px; text-align: center; }
+.thanks-inner { max-width: 640px; }
+.thanks-section h1 { margin: 24px 0 16px; font-size: clamp(30px, 3.6vw, 44px); font-weight: 800; line-height: 1.15; letter-spacing: -1.6px; }
+.thanks-section p { font-size: 16px; line-height: 1.8; color: var(--color-slate-gray); }
 .success-mark { margin-inline: auto; display: grid; place-items: center; width: 52px; height: 52px; color: #25865b; background: #ecf7f0; border-radius: 50%; }
 .faq-layout { display: grid; grid-template-columns: .85fr 1.25fr; gap: 70px; }
 .faq-layout > div > p { font-size: 12px; color: #6c8297; margin-top: 24px; }
@@ -218,6 +221,8 @@ body:has(dialog[open]) { overflow: hidden; }
   .trades-strip p, .trades-strip p > span { gap: 11px; }
   .trades-strip p { font-size: 16px; }
   .lp-section { padding: 62px 0; }
+  .thanks-section { padding: 56px 0 64px; }
+  .thanks-section p { font-size: 15px; }
   .lp-eyebrow { font-size: 8px; letter-spacing: 1.2px; margin-bottom: 12px; }
   .preview-page h2 { font-size: 31px; letter-spacing: -1.3px; }
   .lp-section-heading { margin-bottom: 30px; }

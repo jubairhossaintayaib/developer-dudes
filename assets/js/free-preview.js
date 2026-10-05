@@ -227,22 +227,19 @@
     next.textContent = 'Sending your request…';
     form.setAttribute('aria-busy', 'true');
     const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 20000);
+    const timeout = setTimeout(() => controller.abort(), 45000);
     try {
+      // Sent as text/plain so the browser makes a simple cross-origin request;
+      // the Google Apps Script web app cannot answer a CORS preflight.
       const response = await fetch(config.submissionEndpoint, {
-        method: 'POST', headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' },
         body: JSON.stringify(readValues()), signal: controller.signal, credentials: 'omit'
       });
-      if (!response.ok) throw new Error(`Submission failed: ${response.status}`);
+      const result = await response.json();
+      if (!response.ok || result.ok !== true) throw new Error(`Submission failed: ${response.status}`);
       submitted = true;
-      document.getElementById('success-name').textContent = readValues().name.split(/\s+/)[0];
-      document.getElementById('form-steps').hidden = true;
-      document.getElementById('form-actions').hidden = true;
-      document.getElementById('step-caption').textContent = 'REQUEST RECEIVED';
-      const success = document.getElementById('form-success');
-      success.hidden = false;
-      success.focus({ preventScroll: true });
-      form.reset();
+      try { sessionStorage.setItem('dd_preview_name', readValues().name.split(/\s+/)[0]); } catch (_) {}
+      window.location.href = 'free-preview-thank-you.html';
     } catch (_) {
       showError('We couldn’t confirm your request was received. Please try again, or contact us by email. Your answers are still here.');
       const link = document.createElement('a');
@@ -252,12 +249,24 @@
     } finally {
       clearTimeout(timeout);
       submitting = false;
-      next.disabled = false;
-      back.disabled = false;
-      next.textContent = 'Request my free preview →';
       form.removeAttribute('aria-busy');
+      // On success the button stays busy while the thank-you page loads.
+      if (!submitted) {
+        next.disabled = false;
+        back.disabled = false;
+        next.textContent = 'Request my free preview →';
+      }
     }
   }
+  // Coming back from the thank-you page can restore this page as it was left; start it afresh.
+  window.addEventListener('pageshow', event => {
+    if (!event.persisted || !submitted) return;
+    submitted = false;
+    next.disabled = false;
+    back.disabled = false;
+    form.reset();
+    showStep(0, false);
+  });
   function advance() {
     if (submitting || submitted || !validateStep()) return;
     if (currentStep < steps.length - 1) showStep(currentStep + 1);
