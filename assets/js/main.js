@@ -161,23 +161,6 @@
     var countryByCode = {};
     countries.forEach(function (c) { countryByCode[c.code] = c; });
 
-    function guessCountryCode() {
-      var langs = (navigator.languages && navigator.languages.length) ? navigator.languages : [navigator.language || 'en-US'];
-      for (var i = 0; i < langs.length; i++) {
-        var region = null;
-        try {
-          var loc = new Intl.Locale(langs[i]);
-          if (loc.maximize) loc = loc.maximize();
-          region = loc.region;
-        } catch (err) {
-          var parts = langs[i].split('-');
-          if (parts.length > 1 && parts[1].length === 2) region = parts[1].toUpperCase();
-        }
-        if (region && countryByCode[region]) return region;
-      }
-      return 'US';
-    }
-
     if (phoneCountry && countries.length) {
       var sorted = countries.slice().sort(function (a, b) { return a.name.localeCompare(b.name); });
       sorted.forEach(function (c) {
@@ -186,14 +169,16 @@
         opt.textContent = '+' + c.dial + ' ' + c.name;
         phoneCountry.appendChild(opt);
       });
-      phoneCountry.value = guessCountryCode();
+      phoneCountry.value = 'GB';
     }
 
     function syncPhone() {
       if (!phoneLocal || !phoneFull) return;
       var digits = phoneLocal.value.trim();
       var selected = phoneCountry && countryByCode[phoneCountry.value];
-      var dial = selected ? selected.dial : '1';
+      var dial = selected ? selected.dial : '44';
+      // UK numbers are usually typed with their leading 0, which is dropped after +44.
+      if (dial === '44') digits = digits.replace(/^0/, '');
       phoneFull.value = digits ? '+' + dial + ' ' + digits : '';
     }
     if (phoneLocal) phoneLocal.addEventListener('input', syncPhone);
