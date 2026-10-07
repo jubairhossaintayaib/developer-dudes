@@ -6,6 +6,7 @@
   document.getElementById('footer-year').textContent = new Date().getFullYear();
 
   // Native dialogs provide focus containment, Escape support and focus restoration.
+  // The one-section page has no examples, so it has no project dialog.
   const projectDialog = document.getElementById('project-dialog');
   const contactDialog = document.getElementById('contact-dialog');
   document.querySelectorAll('[data-project]').forEach(trigger => {
@@ -18,7 +19,7 @@
       projectDialog.querySelector('.project-dialog-scroll').scrollTop = 0;
     });
   });
-  [projectDialog, contactDialog].forEach(dialog => {
+  [projectDialog, contactDialog].filter(Boolean).forEach(dialog => {
     dialog.querySelector('.dialog-close').addEventListener('click', () => dialog.close());
     dialog.addEventListener('click', event => {
       if (event.target !== dialog) return;
@@ -42,50 +43,53 @@
 
   // Marketing explanation: transform-only scrolling, with explicit pause and
   // automatic suspension off screen. No motion for reduced-motion preferences.
+  // Only the full page (free-preview-v2.html) has the laptop.
   const screen = document.getElementById('laptop-viewport');
-  const screenshot = screen.querySelector('img');
-  const motionToggle = document.getElementById('motion-toggle');
-  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
-  let userPaused = reducedMotion.matches;
-  let inView = true;
-  let hovering = false;
-  let animation;
-  function updatePlayback() {
-    if (!animation) return;
-    if (userPaused || !inView || hovering || document.hidden) animation.pause();
-    else animation.play();
-    motionToggle.setAttribute('aria-pressed', String(userPaused));
-    motionToggle.replaceChildren(document.createTextNode(userPaused ? 'Play preview ▷' : 'Pause preview Ⅱ'));
+  if (screen) {
+    const screenshot = screen.querySelector('img');
+    const motionToggle = document.getElementById('motion-toggle');
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    let userPaused = reducedMotion.matches;
+    let inView = true;
+    let hovering = false;
+    let animation;
+    function updatePlayback() {
+      if (!animation) return;
+      if (userPaused || !inView || hovering || document.hidden) animation.pause();
+      else animation.play();
+      motionToggle.setAttribute('aria-pressed', String(userPaused));
+      motionToggle.replaceChildren(document.createTextNode(userPaused ? 'Play preview ▷' : 'Pause preview Ⅱ'));
+    }
+    function buildAnimation() {
+      const distance = Math.max(0, screenshot.getBoundingClientRect().height - screen.clientHeight);
+      const previousTime = animation?.currentTime || 0;
+      animation?.cancel();
+      animation = screenshot.animate([
+        { transform: 'translateY(0)', offset: 0 },
+        { transform: 'translateY(0)', offset: 0.08 },
+        { transform: `translateY(-${distance}px)`, offset: 0.92 },
+        { transform: `translateY(-${distance}px)`, offset: 1 }
+      ], { duration: 34000, iterations: Infinity, direction: 'alternate', easing: 'linear' });
+      animation.currentTime = previousTime;
+      updatePlayback();
+    }
+    if (screenshot.complete) buildAnimation();
+    else screenshot.addEventListener('load', buildAnimation, { once: true });
+    new ResizeObserver(buildAnimation).observe(screen);
+    new IntersectionObserver(entries => {
+      inView = entries[0].isIntersecting;
+      updatePlayback();
+    }, { threshold: 0.05 }).observe(screen);
+    motionToggle.addEventListener('click', () => { userPaused = !userPaused; updatePlayback(); });
+    screen.addEventListener('pointerenter', event => { if (event.pointerType === 'mouse') { hovering = true; updatePlayback(); } });
+    screen.addEventListener('pointerleave', () => { hovering = false; updatePlayback(); });
+    document.addEventListener('visibilitychange', updatePlayback);
+    reducedMotion.addEventListener('change', () => {
+      userPaused = reducedMotion.matches;
+      if (userPaused && animation) animation.currentTime = 0;
+      updatePlayback();
+    });
   }
-  function buildAnimation() {
-    const distance = Math.max(0, screenshot.getBoundingClientRect().height - screen.clientHeight);
-    const previousTime = animation?.currentTime || 0;
-    animation?.cancel();
-    animation = screenshot.animate([
-      { transform: 'translateY(0)', offset: 0 },
-      { transform: 'translateY(0)', offset: 0.08 },
-      { transform: `translateY(-${distance}px)`, offset: 0.92 },
-      { transform: `translateY(-${distance}px)`, offset: 1 }
-    ], { duration: 34000, iterations: Infinity, direction: 'alternate', easing: 'linear' });
-    animation.currentTime = previousTime;
-    updatePlayback();
-  }
-  if (screenshot.complete) buildAnimation();
-  else screenshot.addEventListener('load', buildAnimation, { once: true });
-  new ResizeObserver(buildAnimation).observe(screen);
-  new IntersectionObserver(entries => {
-    inView = entries[0].isIntersecting;
-    updatePlayback();
-  }, { threshold: 0.05 }).observe(screen);
-  motionToggle.addEventListener('click', () => { userPaused = !userPaused; updatePlayback(); });
-  screen.addEventListener('pointerenter', event => { if (event.pointerType === 'mouse') { hovering = true; updatePlayback(); } });
-  screen.addEventListener('pointerleave', () => { hovering = false; updatePlayback(); });
-  document.addEventListener('visibilitychange', updatePlayback);
-  reducedMotion.addEventListener('change', () => {
-    userPaused = reducedMotion.matches;
-    if (userPaused && animation) animation.currentTime = 0;
-    updatePlayback();
-  });
 
   const form = document.getElementById('preview-form');
   const steps = Array.from(form.querySelectorAll('[data-step]'));

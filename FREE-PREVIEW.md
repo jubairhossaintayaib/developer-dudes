@@ -2,6 +2,11 @@
 
 Open `/free-preview.html` on the existing static host. This is a separate offer page from the main site's homepage.
 
+There are two versions, sharing one stylesheet, script and thank-you page:
+
+- `free-preview.html`: one section only. Headline, subheadline, then the quiz.
+- `free-preview-v2.html`: the full page, with the hero button and laptop, the quiz, the process steps, the examples and the FAQ.
+
 ## Before accepting leads
 
 Set these public values in `assets/js/preview-config.js`:

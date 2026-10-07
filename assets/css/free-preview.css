@@ -18,6 +18,9 @@
 .whatsapp-button .icon { width: 19px; height: 19px; }
 .lp-hero { background: linear-gradient(180deg, #fff 42%, #f3f7fc 100%); overflow: hidden; }
 .hero-content { text-align: center; padding-top: 63px; }
+.quiz-hero { padding-bottom: 96px; }
+.quiz-hero .hero-description { margin-bottom: 0; }
+.quiz-hero .application-shell { margin-top: 36px; background: #fff; text-align: left; }
 .audience { display: inline-flex; align-items: center; gap: 10px; background: #edf4ff; border: 1px solid #dce9fc; color: #235c9b; padding: 10px 17px; border-radius: 7px; font-size: 14px; font-weight: 800; letter-spacing: 1.5px; }
 .audience .status-dot { width: 8px; height: 8px; }
 .status-dot { display: inline-block; width: 6px; height: 6px; background: var(--color-signal-blue); border-radius: 50%; flex: 0 0 auto; }
@@ -194,6 +197,8 @@ body:has(dialog[open]) { overflow: hidden; }
   .header-row .whatsapp-button > span::after { content: 'WhatsApp'; font-size: 12px; }
   .whatsapp-button .icon { width: 16px; height: 16px; }
   .hero-content { padding-top: 42px; }
+  .quiz-hero { padding-bottom: 60px; }
+  .quiz-hero .application-shell { margin-top: 28px; }
   .audience { gap: 7px; font-size: clamp(9.5px, 2.9vw, 12px); letter-spacing: .8px; padding: 8px 11px; }
   .audience .status-dot { width: 6px; height: 6px; }
   .lp-hero h1 { font-size: clamp(28px, 7.4vw, 44px); letter-spacing: -1.4px; margin-top: 22px; }
