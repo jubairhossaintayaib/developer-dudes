@@ -17,8 +17,24 @@
   <link rel="stylesheet" href="assets/css/styles.css">
   <link rel="stylesheet" href="assets/css/free-preview.css">
   <script src="assets/js/preview-config.js" defer></script>
-  <script src="assets/js/preview-pixel.js" defer></script>
   <script src="assets/js/free-preview.js" defer></script>
+  <!-- Meta Pixel Code -->
+  <script>
+  !function(f,b,e,v,n,t,s)
+  {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+  n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+  if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+  n.queue=[];t=b.createElement(e);t.async=!0;
+  t.src=v;s=b.getElementsByTagName(e)[0];
+  s.parentNode.insertBefore(t,s)}(window, document,'script',
+  'https://connect.facebook.net/en_US/fbevents.js');
+  fbq('init', '1133759729576559');
+  fbq('track', 'PageView');
+  </script>
+  <noscript><img height="1" width="1" style="display:none"
+  src="https://www.facebook.com/tr?id=1133759729576559&ev=PageView&noscript=1"
+  /></noscript>
+  <!-- End Meta Pixel Code -->
 </head>
 <body class="preview-page" id="top">
   <a class="skip-link" href="#main">Skip to content</a>
@@ -68,19 +84,27 @@
         <div class="lp-section-heading"><h2 id="application-title">Your free preview starts here.</h2><p>Complete this form below and we will reach out to you on WhatsApp to start building your free website preview.</p></div>
         <div class="application-shell">
           <form id="preview-form" class="preview-form" novalidate>
-            <div class="form-top"><span id="step-caption">YOUR BUSINESS</span><span id="step-count">01 / 06</span></div>
-            <div class="form-progress" role="progressbar" aria-label="Application progress" aria-valuemin="0" aria-valuemax="6" aria-valuenow="1"><span id="form-progress-fill"></span></div>
+            <div class="form-progress" role="progressbar" aria-label="Progress" aria-valuemin="1" aria-valuemax="6" aria-valuenow="1"><span></span><span></span><span></span><span></span><span></span><span></span></div>
+            <p class="form-count" id="step-count">Question 1 of 5</p>
             <div id="form-steps">
-              <fieldset class="question" data-step="0"><legend><span class="question-index">01 <span aria-hidden="true">→</span></span>First up, what’s your trade?</legend><div class="trade-options"><label><input type="radio" name="trade" value="Plumbing & heating" required><span><kbd>A</kbd> Plumbing &amp; heating <b>✓</b></span></label><label><input type="radio" name="trade" value="Electrical"><span><kbd>B</kbd> Electrical <b>✓</b></span></label><label><input type="radio" name="trade" value="Building & renovation"><span><kbd>C</kbd> Building &amp; renovation <b>✓</b></span></label><label><input type="radio" name="trade" value="Roofing"><span><kbd>D</kbd> Roofing <b>✓</b></span></label><label><input type="radio" name="trade" value="Landscaping"><span><kbd>E</kbd> Landscaping <b>✓</b></span></label><label><input type="radio" name="trade" value="Another local service"><span><kbd>F</kbd> Another local service <b>✓</b></span></label></div></fieldset>
-              <fieldset class="question" data-step="1" hidden disabled><legend><span class="question-index">02 →</span>What’s your business called?</legend><label class="sr-only" for="business">Business name</label><input class="line-input" id="business" name="business" placeholder="e.g. Smith’s Plumbing & Heating" autocomplete="organization" maxlength="150" required><label class="optional-label" for="website">Already have a website? <span>(optional)</span></label><input class="line-input small-input" id="website" name="website" type="text" inputmode="url" placeholder="www.yourbusiness.co.uk" maxlength="300"></fieldset>
-              <fieldset class="question" data-step="2" hidden disabled><legend><span class="question-index">03 →</span>And what’s your name?</legend><label class="sr-only" for="applicant-name">Your name</label><input class="line-input" id="applicant-name" name="name" placeholder="Your name here…" autocomplete="name" maxlength="100" required></fieldset>
-              <fieldset class="question" data-step="3" hidden disabled><legend><span class="question-index">04 →</span>What’s your WhatsApp number?</legend><label class="sr-only" for="whatsapp">WhatsApp number</label><input class="line-input" id="whatsapp" name="whatsapp" type="tel" placeholder="e.g. 07700 900123" autocomplete="tel" inputmode="tel" maxlength="20" required></fieldset>
-              <fieldset class="question" data-step="4" hidden disabled><legend><span class="question-index">05 →</span>What’s your email address?</legend><label class="sr-only" for="email">Email address</label><input class="line-input" id="email" name="email" type="email" placeholder="you@yourbusiness.co.uk" autocomplete="email" maxlength="200" required></fieldset>
-              <fieldset class="question review-question" data-step="5" hidden disabled><legend><span class="question-index">06 →</span>All looking good?</legend><dl id="application-review"></dl></fieldset>
+              <fieldset class="question" data-step="0"><legend>What’s your trade?</legend><div class="quiz-options"><label><input type="radio" name="trade" value="Plumbing & heating"><span><kbd>A</kbd>Plumbing &amp; heating</span></label><label><input type="radio" name="trade" value="Electrical"><span><kbd>B</kbd>Electrical</span></label><label><input type="radio" name="trade" value="Building & renovation"><span><kbd>C</kbd>Building &amp; renovation</span></label><label><input type="radio" name="trade" value="Roofing"><span><kbd>D</kbd>Roofing</span></label><label><input type="radio" name="trade" value="Landscaping"><span><kbd>E</kbd>Landscaping</span></label><label><input type="radio" name="trade" value="Another local service"><span><kbd>F</kbd>Another local service</span></label></div></fieldset>
+              <fieldset class="question" data-step="1" hidden disabled><legend>Do you have a website right now?</legend><div class="quiz-options"><label><input type="radio" name="website" value="No website"><span><kbd>A</kbd>No, I don’t have one</span></label><label><input type="radio" name="website" value="Old or outdated website"><span><kbd>B</kbd>Yes, but it’s old or outdated</span></label><label><input type="radio" name="website" value="Facebook page only"><span><kbd>C</kbd>Just a Facebook page</span></label><label><input type="radio" name="website" value="Happy with current website"><span><kbd>D</kbd>Yes, and I’m happy with it</span></label></div></fieldset>
+              <fieldset class="question" data-step="2" hidden disabled><legend>If someone searched Google for your trade tonight, would they find you?</legend><p class="question-help">Customers who can’t find you online call someone else.</p><div class="quiz-options"><label><input type="radio" name="findable" value="No"><span><kbd>A</kbd>No, I don’t think so</span></label><label><input type="radio" name="findable" value="Not sure"><span><kbd>B</kbd>Honestly, I’m not sure</span></label><label><input type="radio" name="findable" value="Sometimes"><span><kbd>C</kbd>Sometimes</span></label><label><input type="radio" name="findable" value="Yes"><span><kbd>D</kbd>Yes, easily</span></label></div></fieldset>
+              <fieldset class="question" data-step="3" hidden disabled><legend>Where does most of your work come from?</legend><div class="quiz-options"><label><input type="radio" name="work_source" value="Word of mouth"><span><kbd>A</kbd>Word of mouth</span></label><label><input type="radio" name="work_source" value="Repeat customers"><span><kbd>B</kbd>Repeat customers</span></label><label><input type="radio" name="work_source" value="Facebook and social media"><span><kbd>C</kbd>Facebook and social media</span></label><label><input type="radio" name="work_source" value="Paid lead sites"><span><kbd>D</kbd>Paid lead sites</span></label><label><input type="radio" name="work_source" value="Not enough coming in"><span><kbd>E</kbd>Not enough is coming in</span></label></div></fieldset>
+              <fieldset class="question" data-step="4" hidden disabled><legend>What would a few extra jobs a month mean for you?</legend><div class="quiz-options"><label><input type="radio" name="extra_jobs" value="It would change everything"><span><kbd>A</kbd>It would change everything</span></label><label><input type="radio" name="extra_jobs" value="A big boost to my income"><span><kbd>B</kbd>A big boost to my income</span></label><label><input type="radio" name="extra_jobs" value="It would definitely help"><span><kbd>C</kbd>It would definitely help</span></label><label><input type="radio" name="extra_jobs" value="Busy enough already"><span><kbd>D</kbd>I’m busy enough already</span></label></div></fieldset>
+              <fieldset class="question" data-step="5" aria-labelledby="result-title" hidden disabled>
+                <div class="quiz-result"><h3 id="result-title" tabindex="-1"></h3><p id="result-text"></p></div>
+                <p class="details-intro">Want to see what your website could look like? <strong>We’ll design your homepage preview for free.</strong></p>
+                <div class="quiz-fields">
+                  <label class="sr-only" for="business">Business name</label><input class="quiz-input" id="business" name="business" data-label="business name" placeholder="Business name" autocomplete="organization" enterkeyhint="next" maxlength="150" required>
+                  <label class="sr-only" for="applicant-name">Your name</label><input class="quiz-input" id="applicant-name" name="name" data-label="name" placeholder="Your name" autocomplete="name" enterkeyhint="next" maxlength="100" required>
+                  <label class="sr-only" for="whatsapp">WhatsApp number</label><input class="quiz-input" id="whatsapp" name="whatsapp" data-label="WhatsApp number" type="tel" placeholder="WhatsApp number" autocomplete="tel" inputmode="tel" enterkeyhint="send" maxlength="20" required>
+                </div>
+              </fieldset>
             </div>
             <p class="form-error" id="form-error" role="alert" hidden></p>
-            <div class="form-actions" id="form-actions"><button type="button" class="form-next" id="form-next">Next <svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></button><span class="enter-hint">press <strong>Enter ↵</strong></span><button type="button" class="form-back" id="form-back" aria-label="Previous question" hidden>← Back</button></div>
-            <noscript><p>Please enable JavaScript to use the application, or email <a href="mailto:thedeveloperdudesllc@gmail.com">thedeveloperdudesllc@gmail.com</a> to request your preview.</p></noscript>
+            <div class="form-actions" id="form-actions"><button type="button" class="form-next" id="form-next" hidden><span>Get my free homepage preview</span> <svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></button><button type="button" class="form-back" id="form-back" hidden>← Back</button></div>
+            <noscript><p>Please enable JavaScript to use the quiz, or email <a href="mailto:thedeveloperdudesllc@gmail.com">thedeveloperdudesllc@gmail.com</a> to request your preview.</p></noscript>
           </form>
         </div>
       </div>

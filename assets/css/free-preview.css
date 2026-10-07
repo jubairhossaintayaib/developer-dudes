@@ -87,41 +87,41 @@
 .work-meta h3 { font-size: 15px; letter-spacing: -.4px; }
 .work-category { margin-top: 2px; border: 1px solid #d6e1ed; border-radius: 4px; padding: 3px 8px; color: #57728d; font-size: 9px; white-space: nowrap; }
 .application-section { background: #fff; }
-.application-shell { max-width: 800px; margin-inline: auto; border: 1px solid #dbe6f1; border-radius: 14px; overflow: hidden; box-shadow: 0 12px 45px #0b355808; }
-.preview-form { min-width: 0; padding: 30px 42px 36px; display: flex; flex-direction: column; min-height: 430px; }
-.form-top { display: flex; justify-content: space-between; font-size: 9px; letter-spacing: 1px; font-weight: 700; color: #678199; }
-.form-progress { background: #e8eff7; height: 3px; border-radius: 2px; margin: 13px 0 33px; overflow: hidden; }
-.form-progress > span { display: block; height: 100%; background: var(--color-signal-blue); transform-origin: left; transform: scaleX(.166667); }
+.application-shell { max-width: 680px; margin-inline: auto; border: 1px solid #dbe6f1; border-radius: 14px; overflow: hidden; box-shadow: 0 12px 45px #0b355808; }
+.preview-form { min-width: 0; padding: 34px 44px 38px; scroll-margin-top: 16px; }
+.form-progress { display: grid; grid-template-columns: repeat(6, 1fr); gap: 6px; margin-bottom: 24px; }
+.form-progress > span { height: 4px; border-radius: 2px; background: #e3ebf5; transition: background var(--duration-fast) ease; }
+.form-progress > span.is-done { background: var(--color-signal-blue); }
+.form-count { margin-bottom: 10px; font-size: 12px; font-weight: 800; letter-spacing: 1.6px; text-transform: uppercase; color: var(--color-signal-blue); }
 .question { border: 0; padding: 0; margin: 0; min-width: 0; }
-.question legend { font-size: 22px; line-height: 1.5; letter-spacing: -.7px; font-weight: 700; padding: 0 0 22px; width: 100%; }
-.question-index { color: var(--color-signal-blue); font-size: 12px; vertical-align: middle; margin-right: 8px; letter-spacing: 0; white-space: nowrap; }
-.trade-options { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; }
-.trade-options label { cursor: pointer; position: relative; min-width: 0; }
-.trade-options input { position: absolute; opacity: 0; width: 1px; height: 1px; }
-.trade-options label > span { display: flex; align-items: center; gap: 7px; font-size: 11px; font-weight: 500; padding: 10px; border: 1px solid #d7e3f0; background: #f7faff; border-radius: 5px; min-height: 43px; }
-.trade-options kbd { font-family: inherit; font-size: 9px; line-height: 1; border: 1px solid #d4e1ee; border-radius: 3px; padding: 4px; background: #fff; color: #7890a6; }
-.trade-options b { margin-left: auto; visibility: hidden; color: var(--color-signal-blue); }
-.trade-options input:checked + span { border-color: var(--color-signal-blue); background: #edf4ff; box-shadow: inset 0 0 0 1px var(--color-signal-blue); }
-.trade-options input:checked + span b { visibility: visible; }
-.trade-options input:focus-visible + span { outline: 3px solid #006bff60; outline-offset: 3px; }
-.line-input { display: block; width: 100%; border: 0; border-bottom: 1px solid #a5bfd9; background: transparent; padding: 10px 0 12px; border-radius: 0; font-size: 24px !important; color: var(--color-ink-navy); outline-offset: 6px; }
-.line-input::placeholder { color: #90a9c0; opacity: 1; }
-.line-input:focus { outline: 0; border-bottom: 2px solid var(--color-signal-blue); }
-.optional-label { display: block; font-size: 11px; margin-top: 23px; }
-.optional-label > span { color: #7d90a2; }
-.small-input { font-size: 16px !important; }
-.form-actions { display: flex; align-items: center; gap: 14px; margin-top: 24px; }
-.form-next { display: inline-flex; align-items: center; justify-content: center; gap: 12px; padding: 11px 17px; border: 0; border-radius: 5px; background: var(--color-signal-blue); color: #fff !important; font-size: 12px !important; font-weight: 700 !important; }
-.form-next .icon { width: 17px; height: 17px; }
+.question legend { width: 100%; padding: 0 0 22px; font-size: clamp(25px, 3vw, 32px); line-height: 1.2; letter-spacing: -1px; font-weight: 800; }
+.question-help { margin: -10px 0 22px; font-size: 16px; line-height: 1.6; color: var(--color-slate-gray); }
+.quiz-options { display: grid; gap: 12px; }
+.quiz-options label { position: relative; min-width: 0; cursor: pointer; }
+.quiz-options input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.quiz-options label > span { display: flex; align-items: center; gap: 14px; min-height: 64px; padding: 14px 18px; border: 1px solid #d3e0ee; border-radius: 10px; background: #f7faff; font-size: 18px; font-weight: 600; line-height: 1.35; transition: border-color var(--duration-fast) ease, background var(--duration-fast) ease; }
+.quiz-options kbd { display: grid; place-items: center; flex: 0 0 auto; width: 30px; height: 30px; border: 1px solid #d4e1ee; border-radius: 7px; background: #fff; color: #6f89a3; font-family: inherit; font-size: 13px; font-weight: 700; line-height: 1; }
+.quiz-options input:checked + span { border-color: var(--color-signal-blue); background: #edf4ff; box-shadow: inset 0 0 0 1px var(--color-signal-blue); }
+.quiz-options input:checked + span kbd { border-color: var(--color-signal-blue); background: var(--color-signal-blue); color: #fff; }
+.quiz-options input:focus-visible + span { outline: 3px solid #006bff60; outline-offset: 3px; }
+.quiz-result { margin-bottom: 20px; padding: 22px 24px; border: 1px solid #cfe0f7; border-radius: 12px; background: #edf4ff; }
+.quiz-result h3 { margin-bottom: 10px; font-size: clamp(22px, 2.6vw, 28px); line-height: 1.2; letter-spacing: -.8px; font-weight: 800; }
+.quiz-result h3:focus { outline: 0; }
+.quiz-result p { font-size: 16px; line-height: 1.7; color: #3f5f80; }
+.details-intro { margin-bottom: 16px; font-size: 16px; line-height: 1.6; color: var(--color-slate-gray); }
+.details-intro strong { color: var(--color-ink-navy); font-weight: 700; }
+.quiz-fields { display: grid; gap: 12px; }
+.quiz-input { display: block; width: 100%; min-height: 58px; padding: 14px 16px; border: 1px solid #cddbea; border-radius: 10px; background: #fff; color: var(--color-ink-navy); font-size: 17px !important; }
+.quiz-input::placeholder { color: #8aa2b9; opacity: 1; }
+.quiz-input:focus { outline: 0; border-color: var(--color-signal-blue); box-shadow: 0 0 0 3px #006bff22; }
+.quiz-input[aria-invalid="true"] { border-color: #c9434a; }
+.form-actions { display: flex; flex-direction: column; gap: 14px; margin-top: 18px; }
+.form-next { display: flex; align-items: center; justify-content: center; gap: 12px; width: 100%; min-height: 62px; padding: 14px 20px; border: 0; border-radius: 10px; background: var(--color-signal-blue); color: #fff !important; font-size: 18px !important; font-weight: 800 !important; }
+.form-next .icon { width: 22px; height: 22px; }
 .form-next:disabled { opacity: .65; cursor: wait; }
-.enter-hint { font-size: 9px; color: #71869b; }
-.enter-hint strong { color: #4e6f8d; font-weight: 600; }
-.form-back { padding: 8px 0 8px 10px; font-size: 11px !important; border: 0; background: transparent; margin-left: auto; color: #577590 !important; }
-.form-error { margin-top: 17px; color: #a63137; font-size: 12px; line-height: 1.7; }
+.form-back { align-self: flex-start; padding: 6px 0; border: 0; background: transparent; color: #577590 !important; font-size: 15px !important; font-weight: 600; }
+.form-error { margin-top: 14px; color: #a63137; font-size: 15px; line-height: 1.6; }
 .form-error a { text-decoration: underline; }
-#application-review { display: grid; grid-template-columns: 86px 1fr; gap: 7px 15px; font-size: 11px; margin: 0 0 20px; overflow-wrap: anywhere; }
-#application-review dt { color: #72889e; }
-#application-review dd { margin: 0; font-weight: 600; }
 .thanks-page { display: flex; flex-direction: column; min-height: 100vh; min-height: 100dvh; }
 .thanks-page main { flex: 1; display: grid; align-items: center; }
 .thanks-section { padding: 70px 0 80px; text-align: center; }
@@ -165,12 +165,13 @@ body:has(dialog[open]) { overflow: hidden; }
 .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
 @media (hover: hover) and (pointer: fine) {
   .preview-cta:hover { background: #005ce0; box-shadow: 0 4px 0 #00449f, 0 12px 26px #006bff26; }
+  .quiz-options label:hover > span { border-color: #83b2f4; }
+  .form-next:hover { background: #005ce0; }
   .work-preview:hover .portfolio-thumb-overlay { opacity: 1; }
   .work-preview:hover .portfolio-thumb-eye { transform: scale(1); }
   .work-preview:hover .work-shot > img { transform: scale(1.04); }
   .whatsapp-button:hover { background: #1fbe5a; }
   .footer-bottom-row a:hover { color: var(--color-signal-blue); }
-  .trade-options label:hover > span { border-color: #83b2f4; }
 }
 @media (max-width: 1000px) {
   .lp-wrap { width: calc(100% - 48px); }
@@ -223,6 +224,15 @@ body:has(dialog[open]) { overflow: hidden; }
   .trades-strip p, .trades-strip p > span { gap: 11px; }
   .trades-strip p { font-size: 16px; }
   .lp-section { padding: 62px 0; }
+  .preview-form { padding: 26px 20px 28px; }
+  .question legend { font-size: 25px; padding-bottom: 18px; }
+  .question-help { font-size: 15px; margin: -8px 0 18px; }
+  .quiz-options { gap: 10px; }
+  .quiz-options label > span { min-height: 60px; padding: 12px 14px; gap: 12px; font-size: 17px; }
+  .quiz-result { padding: 18px 18px; }
+  .quiz-result p, .details-intro { font-size: 15px; }
+  .form-next { gap: 8px; padding-inline: 12px; font-size: clamp(14px, 4.2vw, 17px) !important; }
+  .form-next .icon { width: 20px; height: 20px; }
   .thanks-section { padding: 48px 0 60px; }
   .thanks-inner p { font-size: 15px; }
   .thanks-steps { margin-top: 30px; }
@@ -240,13 +250,6 @@ body:has(dialog[open]) { overflow: hidden; }
   .work-grid { grid-template-columns: 1fr; gap: 29px; }
   .work-meta h3 { font-size: 14px; }
   .work-category { font-size: 8px; }
-  .preview-form { padding: 25px 22px 28px; min-height: 420px; }
-  .question legend { font-size: 20px; }
-  .trade-options { grid-template-columns: 1fr; gap: 7px; }
-  .trade-options label > span { font-size: 12px; min-height: 44px; }
-  .line-input { font-size: 20px !important; }
-  .small-input { font-size: 16px !important; }
-  .enter-hint { display: none; }
   .faq-layout { grid-template-columns: 1fr; gap: 30px; }
   .faq-list summary { font-size: 15px; line-height: 1.6; padding-block: 19px; }
   .footer-top { flex-wrap: wrap; gap: 18px; padding-bottom: 24px; }

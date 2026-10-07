@@ -89,22 +89,43 @@
 
   const form = document.getElementById('preview-form');
   const steps = Array.from(form.querySelectorAll('[data-step]'));
+  const lastStep = steps.length - 1;
+  const segments = Array.from(form.querySelectorAll('.form-progress > span'));
   const next = document.getElementById('form-next');
+  const nextLabel = next.querySelector('span');
   const back = document.getElementById('form-back');
   const error = document.getElementById('form-error');
-  const labels = ['YOUR BUSINESS', 'YOUR BUSINESS', 'A LITTLE INTRODUCTION', 'LET’S CONNECT', 'YOUR CONTACT DETAILS', 'CHECK YOUR DETAILS'];
   let currentStep = 0;
+  let advanceTimer;
   let submitting = false;
   let submitted = false;
   function readValues() {
     const value = name => form.elements[name].value.trim();
     return {
-      trade: value('trade'), business: value('business'), website: value('website'),
-      name: value('name'), whatsapp: value('whatsapp'),
-      email: value('email'),
+      trade: value('trade'), website: value('website'), findable: value('findable'),
+      work_source: value('work_source'), extra_jobs: value('extra_jobs'),
+      business: value('business'), name: value('name'), whatsapp: value('whatsapp'),
       offer: 'Free website build; £39/month hosting, management and updates',
       source: 'free-preview'
     };
+  }
+  // The closing message reflects what the visitor said about their website and being found.
+  function renderResult() {
+    const { website, findable } = readValues();
+    let title = 'You’re losing jobs you never hear about.';
+    let text = 'Going by your answers, people searching for your trade online can’t count on finding you. They don’t ring round. They pick whoever shows up, and that job is gone before you knew it existed.';
+    if (website === 'Happy with current website' && findable === 'Yes') {
+      title = 'You’re ahead of most. Let’s see if we can beat it.';
+      text = 'You’re already showing up, which puts you in front of most local trades. A homepage preview costs you nothing, so it’s worth seeing what we’d do differently.';
+    } else if (website === 'Old or outdated website') {
+      title = 'Your website is turning customers away.';
+      text = 'An outdated website makes a good business look like a risky one. Customers judge it in seconds, then move on to the next name in the list.';
+    } else if (findable === 'Yes') {
+      title = 'Customers find you, then find no website.';
+      text = 'People are looking you up, but there’s no proper website to show them your work. Without one, it’s easy for them to pick a competitor who has.';
+    }
+    document.getElementById('result-title').textContent = title;
+    document.getElementById('result-text').textContent = text;
   }
   // UK numbers are grouped as they're typed and capped at their full length.
   // A leading + keeps another country's number, up to the 15-digit E.164 limit.
@@ -163,53 +184,47 @@
       control.removeAttribute('aria-errormessage');
     });
   }
-  function validateStep() {
+  function validateDetails() {
     clearError();
-    const active = steps[currentStep];
-    const controls = Array.from(active.querySelectorAll('input'));
-    for (const input of controls) {
-      if (input.type !== 'radio') input.value = input.value.trim();
+    for (const input of steps[lastStep].querySelectorAll('input')) {
+      input.value = input.value.trim();
       if (input.name === 'whatsapp') {
         input.value = formatWhatsapp(input.value).value;
-        input.setCustomValidity(isValidWhatsapp(input.value) ? '' : 'Enter a full UK number, e.g. 07700 900123. Outside the UK? Start with + and your country code.');
+        input.setCustomValidity(!input.value || isValidWhatsapp(input.value) ? '' : 'Enter a full UK number, e.g. 07700 900123. Outside the UK? Start with + and your country code.');
       }
       if (!input.checkValidity()) {
-        const message = input.type === 'radio' ? 'Please choose the trade that best describes your business.'
-          : input.type === 'email' ? 'Please enter a valid email address.'
-          : input.validationMessage || 'Please fill in this answer to continue.';
-        showError(message, input);
+        showError(input.validity.valueMissing ? `Please enter your ${input.dataset.label}.` : input.validationMessage, input);
         return false;
       }
     }
     return true;
   }
-  function renderReview() {
-    const answers = readValues();
-    const review = document.getElementById('application-review');
-    review.replaceChildren();
-    [['Trade', answers.trade], ['Business', answers.business], ['Website', answers.website || 'No existing website'], ['Name', answers.name], ['WhatsApp', answers.whatsapp], ['Email', answers.email]].forEach(([label, value]) => {
-      const term = document.createElement('dt');
-      const detail = document.createElement('dd');
-      term.textContent = label;
-      detail.textContent = value;
-      review.append(term, detail);
-    });
-  }
   function showStep(index, focus = true) {
+    clearTimeout(advanceTimer);
     currentStep = index;
     clearError();
     steps.forEach((step, position) => {
       step.hidden = position !== index;
       step.disabled = position !== index;
     });
-    document.getElementById('step-caption').textContent = labels[index];
-    document.getElementById('step-count').textContent = `${String(index + 1).padStart(2, '0')} / ${String(steps.length).padStart(2, '0')}`;
-    document.getElementById('form-progress-fill').style.transform = `scaleX(${(index + 1) / steps.length})`;
+    segments.forEach((segment, position) => segment.classList.toggle('is-done', position <= index));
     form.querySelector('[role="progressbar"]').setAttribute('aria-valuenow', String(index + 1));
+    document.getElementById('step-count').textContent = index < lastStep ? `Question ${index + 1} of ${lastStep}` : 'Your result';
     back.hidden = index === 0;
-    next.textContent = index === steps.length - 1 ? 'Request my free preview →' : 'Next →';
-    if (index === steps.length - 1) renderReview();
-    if (focus) (steps[index].querySelector('input') || next).focus();
+    next.hidden = index !== lastStep;
+    if (index === lastStep) renderResult();
+    if (!focus) return;
+    // The quiz changes height between steps, so keep its top in view.
+    if (form.getBoundingClientRect().top < 0) form.scrollIntoView({ block: 'start' });
+    // On the last step focus goes to the result, not a field, so a phone keyboard doesn't cover it.
+    const target = index === lastStep ? document.getElementById('result-title')
+      : steps[index].querySelector('input:checked') || steps[index].querySelector('input');
+    target.focus({ preventScroll: true });
+  }
+  // Choosing an answer moves straight on; the short pause lets the choice show as selected.
+  function continueFromChoice() {
+    clearTimeout(advanceTimer);
+    advanceTimer = setTimeout(() => { if (currentStep < lastStep) showStep(currentStep + 1); }, 220);
   }
   async function submitApplication() {
     if (submitting || submitted) return;
@@ -224,43 +239,36 @@
     submitting = true;
     next.disabled = true;
     back.disabled = true;
-    next.textContent = 'Sending your request…';
+    nextLabel.textContent = 'Sending your request…';
     form.setAttribute('aria-busy', 'true');
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 45000);
-    try {
-      // Sent as text/plain so the browser makes a simple cross-origin request;
-      // the Google Apps Script web app cannot answer a CORS preflight.
-      const response = await fetch(config.submissionEndpoint, {
-        method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify(readValues()), signal: controller.signal, credentials: 'omit'
-      });
-      const result = await response.json();
-      if (!response.ok || result.ok !== true) throw new Error(`Submission failed: ${response.status}`);
-      submitted = true;
-      // The thank-you page greets by first name and counts the lead for Meta once.
-      try {
-        sessionStorage.setItem('dd_preview_name', readValues().name.split(/\s+/)[0]);
-        sessionStorage.setItem('dd_preview_lead', '1');
-      } catch (_) {}
-      window.location.href = 'free-preview-thank-you.html';
-    } catch (_) {
-      showError('We couldn’t confirm your request was received. Please try again, or contact us by email. Your answers are still here.');
+    // Sent as text/plain so the browser makes a simple cross-origin request;
+    // the Google Apps Script web app cannot answer a CORS preflight.
+    // The lead is saved once the request reaches Google, but the reply takes several seconds.
+    // keepalive lets the request finish after this page is left, so the visitor only waits
+    // long enough for a dead connection to show up as an error.
+    const saved = fetch(config.submissionEndpoint, {
+      method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify(readValues()), keepalive: true, credentials: 'omit'
+    }).then(response => response.json()).then(result => result.ok === true, () => false);
+    const stillSending = new Promise(resolve => setTimeout(() => resolve(true), 1000));
+    const sent = await Promise.race([saved, stillSending]);
+    submitting = false;
+    form.removeAttribute('aria-busy');
+    if (!sent) {
+      next.disabled = false;
+      back.disabled = false;
+      nextLabel.textContent = 'Get my free homepage preview';
+      showError('We couldn’t send your request. Please check your connection and try again, or contact us by email. Your answers are still here.');
       const link = document.createElement('a');
       link.href = `mailto:${emailAddress}`;
       link.textContent = ` ${emailAddress}`;
       error.append(link);
-    } finally {
-      clearTimeout(timeout);
-      submitting = false;
-      form.removeAttribute('aria-busy');
-      // On success the button stays busy while the thank-you page loads.
-      if (!submitted) {
-        next.disabled = false;
-        back.disabled = false;
-        next.textContent = 'Request my free preview →';
-      }
+      return;
     }
+    // The button stays busy while the thank-you page loads, which greets by first name.
+    submitted = true;
+    try { sessionStorage.setItem('dd_preview_name', readValues().name.split(/\s+/)[0]); } catch (_) {}
+    window.location.href = 'free-preview-thank-you.html';
   }
   // Coming back from the thank-you page can restore this page as it was left; start it afresh.
   window.addEventListener('pageshow', event => {
@@ -268,27 +276,43 @@
     submitted = false;
     next.disabled = false;
     back.disabled = false;
+    nextLabel.textContent = 'Get my free homepage preview';
     form.reset();
     showStep(0, false);
   });
-  function advance() {
-    if (submitting || submitted || !validateStep()) return;
-    if (currentStep < steps.length - 1) showStep(currentStep + 1);
-    else submitApplication();
+  function submitDetails() {
+    if (submitting || submitted || !validateDetails()) return;
+    submitApplication();
   }
-  next.addEventListener('click', advance);
+  next.addEventListener('click', submitDetails);
   back.addEventListener('click', () => { if (!submitting && currentStep > 0) showStep(currentStep - 1); });
-  form.addEventListener('submit', event => { event.preventDefault(); advance(); });
+  form.addEventListener('submit', event => { event.preventDefault(); if (currentStep === lastStep) submitDetails(); });
+  form.addEventListener('click', event => {
+    // A click that lands on the radio itself is the browser echoing a label press or an
+    // arrow-key move, so only a press on the answer's own content moves on.
+    if (event.target.closest('.quiz-options label') && event.target.tagName !== 'INPUT') continueFromChoice();
+  });
   form.addEventListener('keydown', event => {
-    if (event.key === 'Enter' && event.target.tagName === 'INPUT') {
+    const input = event.target;
+    if (event.key === 'Enter' && input.tagName === 'INPUT') {
       event.preventDefault();
-      advance();
+      if (input.type === 'radio') {
+        input.checked = true;
+        continueFromChoice();
+        return;
+      }
+      // Enter steps through the contact fields and sends from the last one left to fill.
+      const fields = Array.from(steps[lastStep].querySelectorAll('input'));
+      const nextEmpty = fields.slice(fields.indexOf(input) + 1).find(field => !field.value.trim());
+      if (nextEmpty) nextEmpty.focus();
+      else submitDetails();
     }
-    if (currentStep === 0 && /^[a-f]$/i.test(event.key) && !event.ctrlKey && !event.metaKey && !event.altKey) {
-      const radio = steps[0].querySelectorAll('input')[event.key.toLowerCase().charCodeAt(0) - 97];
-      radio.checked = true;
-      radio.focus();
-      clearError();
+    if (currentStep < lastStep && /^[a-z]$/i.test(event.key) && !event.ctrlKey && !event.metaKey && !event.altKey) {
+      const radio = steps[currentStep].querySelectorAll('input')[event.key.toLowerCase().charCodeAt(0) - 97];
+      if (radio) {
+        radio.checked = true;
+        continueFromChoice();
+      }
     }
   });
   form.addEventListener('input', event => {
@@ -309,7 +333,7 @@
       }
       input.setCustomValidity('');
     }
-    clearError();
+    if (input.type !== 'radio') clearError();
   });
   showStep(0, false);
 })();
