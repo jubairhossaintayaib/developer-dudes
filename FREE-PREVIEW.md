@@ -36,6 +36,17 @@ After editing the script later, use Deploy > Manage deployments > Edit > New ver
 
 Meta's own Google Sheets connection (Business Suite > Instant Forms > CRM Setup) writes instant-form leads to the `Facebook Leads` tab and reads `lead_status` back from it. Run `installFacebookSync` once from the Apps Script editor: every minute it emails any new row in that tab. The leads stay where Meta put them. A row that can't be emailed is retried for a few minutes and then reported rather than dropped. The script only reads the `Facebook Leads` tab, so keep that tab's name and row order as Meta leaves them.
 
+### Lead quality for Meta
+
+Landing page leads carry a `Status` in the `Website Leads` tab (New, Contacted, Qualified, Preview sent, Converted, Not qualified). A new lead, and every change of Status made by hand, is reported to Meta's Conversions API as a CRM event, matched on the hashed phone number and name plus Meta's click and browser IDs saved from the visit. The outcome is noted in `Sent to Meta`.
+
+1. In Events Manager, generate a Conversions API access token for the dataset.
+2. In Apps Script, open Project Settings > Script properties and add `META_ACCESS_TOKEN` with that token. Do not put the token in this repository.
+3. Run `installMetaUpdates` once from the editor and approve the permission prompt.
+4. Deploy > Manage deployments > Edit > New version, so new leads are reported too.
+
+Setting the script property `META_TEST_EVENT_CODE` sends events to the Test events tab in Events Manager instead. Instant-form leads are not handled here: Meta reads their `lead_status` straight from the `Facebook Leads` tab.
+
 Confirm that the existing linked privacy policy and terms cover this UK £39/month offer before publishing. Domain registration costs, cancellation terms and delivery time guarantees have not been invented.
 
 ## Behaviour

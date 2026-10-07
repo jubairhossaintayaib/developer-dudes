@@ -8,6 +8,11 @@
  * Landing page leads (free-preview.html): the form posts here and each lead is added to
  * WEBSITE_TAB. Deploy as a web app (Execute as: Me, Who has access: Anyone) and put the
  * /exec URL in assets/js/preview-config.js as submissionEndpoint.
+ *
+ * Lead quality for Meta: each landing page lead has a Status. Run installMetaUpdates once;
+ * from then on a new lead, and every change of Status, is reported to Meta so it can learn
+ * which leads turn into customers. The access token is read from the script property
+ * META_ACCESS_TOKEN and is never written in this file.
  */
 const NOTIFY_EMAIL = 'thedeveloperdudesllc@gmail.com';
 const TIME_ZONE = 'Europe/London';
@@ -43,8 +48,20 @@ const COLUMNS = [
   // The quiz no longer asks for an email; the Email column stays for the same reason.
   ['Found on Google', 'findable'],
   ['Work comes from', 'work_source'],
-  ['Extra jobs would mean', 'extra_jobs']
+  ['Extra jobs would mean', 'extra_jobs'],
+  // Lead quality for Meta: the stage the lead has reached, when Meta was last told, and
+  // Meta's own cookies from the visit, which let it match the lead to the ad that was clicked.
+  ['Status', 'status'],
+  ['Sent to Meta', 'meta_sent'],
+  ['Meta click ID', 'fbc'],
+  ['Meta browser ID', 'fbp']
 ];
+// Stages a lead moves through, in order. The first is set when the lead arrives.
+const STATUSES = ['New', 'Contacted', 'Qualified', 'Preview sent', 'Converted', 'Not qualified'];
+// Fields kept in the sheet but left out of the notification email.
+const NOT_IN_EMAIL = ['status', 'meta_sent', 'fbc', 'fbp'];
+const META_DATASET_ID = '1133759729576559';
+const META_API_VERSION = 'v26.0';
 
 function doPost(e) {
   const lock = LockService.getScriptLock();
@@ -54,11 +71,18 @@ function doPost(e) {
     const received = Utilities.formatDate(new Date(), TIME_ZONE, 'yyyy-MM-dd HH:mm:ss');
     const sheet = getWebsiteSheet();
     sheet.appendRow(COLUMNS.map(([, field]) => asText(field ? lead[field] : received)));
-    // The lead is saved at this point, so a mail problem must not make the form report a failure.
+    // The lead is saved at this point, so a problem with the email or with Meta must not
+    // make the form report a failure.
     try {
       notify(lead, received, sheet, []);
     } catch (mailError) {
       console.error('Lead saved but notification failed: ' + mailError);
+    }
+    try {
+      const sent = sendStageToMeta(lead, lead.status);
+      if (sent) sheet.getRange(sheet.getLastRow(), columnOf('meta_sent')).setValue(asText(sent));
+    } catch (metaError) {
+      console.error('Lead saved but not reported to Meta: ' + metaError);
     }
     return respond({ ok: true });
   } catch (error) {
@@ -70,18 +94,24 @@ function doPost(e) {
 
 // Opening the web app URL in a browser shows this, which confirms the deployment is live.
 // The version says which copy of this script is deployed: 3 is the first that accepts a
-// lead without an email address, which the landing page quiz relies on.
+// lead without an email address, which the landing page quiz relies on; 4 adds the Status
+// column and reports lead stages to Meta.
 function doGet() {
-  return respond({ ok: true, service: 'free-preview-leads', version: 3 });
+  return respond({ ok: true, service: 'free-preview-leads', version: 4 });
 }
 
 function readLead(e) {
   const data = JSON.parse(e.postData.contents);
   const lead = {};
   COLUMNS.forEach(([, field]) => {
-    if (field) lead[field] = String(data[field] == null ? '' : data[field]).replace(/\s+/g, ' ').trim().slice(0, 300);
+    // Meta's click ID can be long, so it gets more room than a typed answer.
+    const limit = field === 'fbc' || field === 'fbp' ? 1000 : 300;
+    if (field) lead[field] = String(data[field] == null ? '' : data[field]).replace(/\s+/g, ' ').trim().slice(0, limit);
   });
   if (!lead.name || !lead.business || !lead.whatsapp) throw new Error('Missing required fields');
+  // These two are ours to set, whatever the request says.
+  lead.status = STATUSES[0];
+  lead.meta_sent = '';
   return lead;
 }
 
@@ -99,8 +129,18 @@ function getWebsiteSheet() {
     // The tab was made before the newest columns existed: extend its headings to match.
     sheet.getRange(1, 1, sheet.getMaxRows(), COLUMNS.length).setNumberFormat('@');
     sheet.getRange(1, 1, 1, COLUMNS.length).setValues([COLUMNS.map(([title]) => title)]).setFontWeight('bold');
+  } else {
+    return sheet;
   }
+  // Status is picked from a list, though anything typed in is accepted and sent as it is.
+  const choices = SpreadsheetApp.newDataValidation().requireValueInList(STATUSES, true).setAllowInvalid(true).build();
+  sheet.getRange(2, columnOf('status'), sheet.getMaxRows() - 1, 1).setDataValidation(choices);
   return sheet;
+}
+
+// Position in the sheet (1 = column A) of the column fed by a field.
+function columnOf(field) {
+  return COLUMNS.findIndex(column => column[1] === field) + 1;
 }
 
 // The leading apostrophe makes Sheets store the value as plain text, so phone numbers keep
@@ -111,7 +151,8 @@ function asText(value) {
 
 function notify(lead, received, sheet, extraLines) {
   const link = SpreadsheetApp.getActiveSpreadsheet().getUrl() + '#gid=' + sheet.getSheetId();
-  const lines = COLUMNS.filter(([, field]) => field && lead[field]).map(([title, field]) => title + ': ' + lead[field]);
+  const lines = COLUMNS.filter(([, field]) => field && lead[field] && NOT_IN_EMAIL.indexOf(field) === -1)
+    .map(([title, field]) => title + ': ' + lead[field]);
   const message = {
     to: NOTIFY_EMAIL,
     subject: 'New lead: ' + (lead.business || lead.name || lead.whatsapp || lead.email),
@@ -221,6 +262,99 @@ function installFacebookSync() {
     .forEach(trigger => ScriptApp.deleteTrigger(trigger));
   ScriptApp.newTrigger('syncFacebookLeads').timeBased().everyMinutes(1).create();
   syncFacebookLeads();
+}
+
+/**
+ * Reports a lead's stage to Meta through the Conversions API, as a CRM event. Returns a
+ * short note for the Sent to Meta column, or '' when no access token has been set up.
+ */
+function sendStageToMeta(lead, stage) {
+  const props = PropertiesService.getScriptProperties();
+  const token = props.getProperty('META_ACCESS_TOKEN');
+  if (!token || !stage) return '';
+  // Meta matches on hashed details: lower case, no spaces, phone as digits with country code.
+  const names = String(lead.name || '').toLowerCase().split(' ').filter(Boolean);
+  const user = {};
+  const phone = metaPhone(lead.whatsapp);
+  if (phone) user.ph = [sha256(phone)];
+  if (lead.email) user.em = [sha256(String(lead.email).toLowerCase())];
+  if (names.length) user.fn = [sha256(names[0])];
+  if (names.length > 1) user.ln = [sha256(names[names.length - 1])];
+  if (lead.fbc) user.fbc = lead.fbc;
+  if (lead.fbp) user.fbp = lead.fbp;
+  const payload = { data: [{
+    event_name: stage,
+    event_time: Math.floor(Date.now() / 1000),
+    action_source: 'system_generated',
+    custom_data: { event_source: 'crm', lead_event_source: 'Google Sheets' },
+    user_data: user
+  }] };
+  // Set META_TEST_EVENT_CODE while testing to see events in Events Manager's Test events tab.
+  const testCode = props.getProperty('META_TEST_EVENT_CODE');
+  if (testCode) payload.test_event_code = testCode;
+  const response = UrlFetchApp.fetch(
+    'https://graph.facebook.com/' + META_API_VERSION + '/' + META_DATASET_ID + '/events?access_token=' + encodeURIComponent(token),
+    { method: 'post', contentType: 'application/json', payload: JSON.stringify(payload), muteHttpExceptions: true });
+  const when = Utilities.formatDate(new Date(), TIME_ZONE, 'yyyy-MM-dd HH:mm');
+  if (response.getResponseCode() === 200) return stage + ' sent ' + when;
+  let reason = 'HTTP ' + response.getResponseCode();
+  try {
+    reason = JSON.parse(response.getContentText()).error.message;
+  } catch (_) {}
+  return stage + ' failed ' + when + ': ' + reason;
+}
+
+// 07700 900123 and +44 7700 900123 both become 447700900123.
+function metaPhone(value) {
+  const text = String(value || '').trim();
+  const digits = text.replace(/\D/g, '');
+  if (text.charAt(0) === '+') return digits;
+  if (digits.indexOf('00') === 0) return digits.slice(2);
+  return digits.charAt(0) === '0' ? '44' + digits.slice(1) : digits;
+}
+
+function sha256(value) {
+  return Utilities.computeDigest(Utilities.DigestAlgorithm.SHA_256, value, Utilities.Charset.UTF_8)
+    .map(byte => ('0' + ((byte + 256) % 256).toString(16)).slice(-2)).join('');
+}
+
+/**
+ * Runs when a cell is edited by hand (set up by installMetaUpdates). A change in the Status
+ * column of WEBSITE_TAB is reported to Meta, and the outcome is noted beside it.
+ */
+function reportStatusChange(e) {
+  const sheet = e.range.getSheet();
+  const status = columnOf('status');
+  if (sheet.getName() !== WEBSITE_TAB || e.range.getColumn() > status || e.range.getLastColumn() < status) return;
+  for (let row = Math.max(2, e.range.getRow()); row <= e.range.getLastRow(); row += 1) {
+    const values = sheet.getRange(row, 1, 1, COLUMNS.length).getDisplayValues()[0];
+    const lead = {};
+    COLUMNS.forEach(([, field], index) => { if (field) lead[field] = values[index].trim(); });
+    if (!lead.status || !lead.whatsapp) continue;
+    let note;
+    try {
+      note = sendStageToMeta(lead, lead.status) || 'Not sent: no META_ACCESS_TOKEN set';
+    } catch (error) {
+      note = lead.status + ' failed: ' + error;
+    }
+    sheet.getRange(row, columnOf('meta_sent')).setValue(asText(note));
+  }
+}
+
+/**
+ * Run once from the editor, after saving the access token as the script property
+ * META_ACCESS_TOKEN: adds the Status columns to WEBSITE_TAB and starts reporting changes.
+ */
+function installMetaUpdates() {
+  if (!PropertiesService.getScriptProperties().getProperty('META_ACCESS_TOKEN')) {
+    throw new Error('Add the script property META_ACCESS_TOKEN first (Project Settings > Script properties).');
+  }
+  getWebsiteSheet();
+  ScriptApp.getProjectTriggers()
+    .filter(trigger => trigger.getHandlerFunction() === 'reportStatusChange')
+    .forEach(trigger => ScriptApp.deleteTrigger(trigger));
+  ScriptApp.newTrigger('reportStatusChange').forSpreadsheet(SpreadsheetApp.getActiveSpreadsheet()).onEdit().create();
+  console.log('Ready. Change a Status in the "' + WEBSITE_TAB + '" tab and watch the Sent to Meta column.');
 }
 
 /** Run from the editor to check the landing page path: adds a test row and sends a test email. */

@@ -103,12 +103,23 @@
   let advanceTimer;
   let submitting = false;
   let submitted = false;
+  // Meta's own cookies from this visit. Saved with the lead so that later updates about it
+  // can be matched to the ad that was clicked.
+  function cookie(name) {
+    const match = document.cookie.match(new RegExp(`(?:^|; )${name}=([^;]*)`));
+    return match ? decodeURIComponent(match[1]) : '';
+  }
+  function metaClickId() {
+    const fbclid = new URLSearchParams(window.location.search).get('fbclid');
+    return cookie('_fbc') || (fbclid ? `fb.1.${Date.now()}.${fbclid}` : '');
+  }
   function readValues() {
     const value = name => form.elements[name].value.trim();
     return {
       trade: value('trade'), website: value('website'), findable: value('findable'),
       work_source: value('work_source'), extra_jobs: value('extra_jobs'),
       business: value('business'), name: value('name'), whatsapp: value('whatsapp'),
+      fbc: metaClickId(), fbp: cookie('_fbp'),
       offer: 'Free website build; £39/month hosting, management and updates',
       source: 'free-preview'
     };
@@ -228,7 +239,9 @@
   // Choosing an answer moves straight on; the short pause lets the choice show as selected.
   function continueFromChoice() {
     clearTimeout(advanceTimer);
-    advanceTimer = setTimeout(() => { if (currentStep < lastStep) showStep(currentStep + 1); }, 220);
+    advanceTimer = setTimeout(() => {
+      if (currentStep < lastStep && steps[currentStep].querySelector('input:checked')) showStep(currentStep + 1);
+    }, 220);
   }
   async function submitApplication() {
     if (submitting || submitted) return;
@@ -285,16 +298,27 @@
     showStep(0, false);
   });
   function submitDetails() {
-    if (submitting || submitted || !validateDetails()) return;
-    submitApplication();
+    if (submitting || submitted) return;
+    // Every question must have its answer recorded before the lead is sent.
+    const unanswered = steps.findIndex((step, index) => index < lastStep && !step.querySelector('input:checked'));
+    if (unanswered !== -1) {
+      showStep(unanswered);
+      showError('Please choose an answer to carry on.');
+      return;
+    }
+    if (validateDetails()) submitApplication();
   }
   next.addEventListener('click', submitDetails);
   back.addEventListener('click', () => { if (!submitting && currentStep > 0) showStep(currentStep - 1); });
   form.addEventListener('submit', event => { event.preventDefault(); if (currentStep === lastStep) submitDetails(); });
   form.addEventListener('click', event => {
     // A click that lands on the radio itself is the browser echoing a label press or an
-    // arrow-key move, so only a press on the answer's own content moves on.
-    if (event.target.closest('.quiz-options label') && event.target.tagName !== 'INPUT') continueFromChoice();
+    // arrow-key move, so only a press on the answer's own content moves on. The answer is
+    // recorded here too, rather than relying on the browser to tick the radio.
+    const option = event.target.closest('.quiz-options label');
+    if (!option || event.target.tagName === 'INPUT') return;
+    option.querySelector('input').checked = true;
+    continueFromChoice();
   });
   form.addEventListener('keydown', event => {
     const input = event.target;
