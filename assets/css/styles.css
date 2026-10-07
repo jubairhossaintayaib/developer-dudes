@@ -1370,69 +1370,6 @@ p { color: var(--color-slate-gray); }
 
 .feature-grid--3 { grid-template-columns: repeat(3, 1fr); }
 
-.team-grid {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-32);
-  max-width: 880px;
-  margin: 0 auto;
-}
-.team-card {
-  display: flex;
-  align-items: stretch;
-  background: var(--color-paper);
-  border-radius: var(--radius-cards);
-  overflow: hidden;
-  box-shadow: var(--shadow-sm);
-  transition: transform var(--duration-base) var(--ease-standard), box-shadow var(--duration-base) var(--ease-standard);
-}
-@media (hover: hover) and (pointer: fine) {
-  .team-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-sm-2); }
-}
-.team-photo {
-  flex: none;
-  width: 240px;
-  height: auto;
-  aspect-ratio: 1 / 1;
-  object-fit: cover;
-  display: block;
-}
-.team-meta {
-  flex: 1;
-  min-width: 0;
-  padding: var(--spacing-32);
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-.team-name {
-  font-size: var(--text-body-lg);
-  font-weight: var(--font-weight-bold);
-  color: var(--color-ink-navy);
-  margin-bottom: 2px;
-}
-.team-role {
-  display: block;
-  font-size: var(--text-body-sm);
-  font-weight: var(--font-weight-semibold);
-  color: var(--color-signal-blue);
-  margin-bottom: var(--spacing-16);
-}
-.team-credential {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  background: #e6f0ff;
-  color: var(--color-deep-cobalt);
-  font-size: var(--text-caption);
-  font-weight: var(--font-weight-medium);
-  padding: 4px 10px;
-  border-radius: var(--radius-badges);
-  margin-bottom: var(--spacing-16);
-  align-self: flex-start;
-}
-.team-meta p { font-size: var(--text-body-sm); }
-
 /* ------------------------------ Reveal-on-scroll ------------------------------ */
 
 .reveal {
@@ -1490,9 +1427,6 @@ p { color: var(--color-slate-gray); }
   .portfolio-grid { grid-template-columns: 1fr; }
   .approach-grid { grid-template-columns: 1fr; }
   .feature-grid { grid-template-columns: 1fr; }
-  .team-card { flex-direction: column; }
-  .team-photo { width: 100%; aspect-ratio: 4 / 3; }
-  .team-meta { padding: var(--spacing-24); }
   .service-hero-card { padding: var(--spacing-64) var(--spacing-24); }
   .service-hero-card h1 { font-size: var(--text-heading-sm); }
   .service-hero-card .hero-actions { flex-direction: column; width: 100%; }
